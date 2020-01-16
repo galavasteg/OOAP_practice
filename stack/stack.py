@@ -37,3 +37,22 @@ class Stack(AbstractStack):
     def clear(self):
         self.__init__()
 
+    def peek(self) -> object:
+        if self.size() > 0:
+            result = self.__stack[-1]
+            self.__peek_status = self.PEEK_OK
+        else:
+            result = 0
+            self.__peek_status = self.PEEK_ERR
+        return result
+
+    def size(self) -> int:
+        return len(self.__stack)
+
+    # status requests
+    def get_pop_status(self) -> int:
+        return self.__pop_status
+
+    def get_peek_status(self) -> int:
+        return self.__peek_status
+
