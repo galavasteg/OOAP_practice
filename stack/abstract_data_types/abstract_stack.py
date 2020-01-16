@@ -15,7 +15,7 @@ CONSTANTS
     PEEK_ERR = 2  # stack storage is empty
 
 CONSTRUCTOR
-    __new__(cls) -> new class instance
+    __new__(cls) -> new stack instance
         Post-condition:
             created a new empty stack instance.
 
@@ -46,12 +46,12 @@ REQUESTS
         Pre-condition:
             stack storage is not empty.
 
-    size(self) -> Return the number (int) of items in the stack storage
+    size(self) -> number of items in the stack storage
 
 ADDITIONAL REQUESTS
-    get_pop_status(self) -> Return status of last pop() call (POP_* constant)
+    get_pop_status(self) -> status of last pop() call (POP_* constant)
 
-    get_peek_status(self) -> Return status of last peek() call (PEEK_* constant)
+    get_peek_status(self) -> status of last peek() call (PEEK_* constant)
 
 """
 
