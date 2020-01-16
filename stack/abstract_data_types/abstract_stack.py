@@ -26,6 +26,21 @@ CONSTRUCTOR
     __init__(self):
         Initializing the instance after it's been created.
 
+COMMANDS
+    push(self, value)
+        Post-condition:
+            new item added into stack storage.
+
+    pop(self)
+        Pre-condition:
+            stack storage is not empty.
+        Post-condition:
+            last added item removed from stack storage.
+
+    clear(self)
+        Post-condition:
+            stack storage is empty.
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -57,5 +72,21 @@ class AbstractStack(metaclass=ABCMeta):
     @abstractmethod
     def __init__(self):
         """Initializing the instance after it's been created"""
+
+    # commands
+    @abstractmethod
+    def push(self, value: object):
+        """Post-condition: new item added into stack storage"""
+
+    @abstractmethod
+    def pop(self):
+        """
+        Pre-condition: stack storage is not empty.
+        Post-condition: last added item removed from stack storage.
+        """
+
+    @abstractmethod
+    def clear(self):
+        """Post-condition: stack storage is empty."""
 
 
