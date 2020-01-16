@@ -15,17 +15,15 @@ class Stack(AbstractStack):
     def __init__(self):
         super().__init__()
 
-        # private attributes
-        self.__stack = None  # main stack storage
-        self.__peek_status = None  # last peek() call status
-        self.__pop_status = None  # last pop() call status
+        # private attributes:
 
-        self.clear()
-
-    def clear(self):
-        self.__stack = []  # empty list
+        # main stack storage
+        self.__stack = []  # empty list as stack storage
 
         # initial statuses for peek() and pop() pre-conditions
         self.__peek_status = self.PEEK_NIL
         self.__pop_status = self.POP_NIL
+
+    def clear(self):
+        self.__init__()
 
