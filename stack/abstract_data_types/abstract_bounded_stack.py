@@ -38,6 +38,23 @@ CONSTRUCTOR
         Post-condition:
             The stack storage capacity is limited to *max_size* number of items
 
+COMMANDS
+    push(self, value)
+        Pre-condition:
+            stack storage is not full.
+        Post-condition:
+            new item added into stack storage.
+
+    pop(self)
+        Pre-condition:
+            stack storage is not empty.
+        Post-condition:
+            last added item removed from stack storage.
+
+    clear(self)
+        Post-condition:
+            stack storage is empty.
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -73,5 +90,24 @@ class AbstractBoundedStack(metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, max_size: int):
         """Initializing the instance after it's been created"""
+
+    # commands
+    @abstractmethod
+    def push(self, value: object):
+        """
+        Pre-condition: stack storage is not full.
+        Post-condition: new item added into stack storage.
+        """
+
+    @abstractmethod
+    def pop(self):
+        """
+        Pre-condition: stack storage is not empty.
+        Post-condition: last added item removed from stack storage.
+        """
+
+    @abstractmethod
+    def clear(self):
+        """Post-condition: stack storage is empty."""
 
 
