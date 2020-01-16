@@ -41,6 +41,13 @@ COMMANDS
         Post-condition:
             stack storage is empty.
 
+REQUESTS
+    peek(self) -> last pushed item
+        Pre-condition:
+            stack storage is not empty.
+
+    size(self) -> Return the number (int) of items in the stack storage
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -88,5 +95,19 @@ class AbstractStack(metaclass=ABCMeta):
     @abstractmethod
     def clear(self):
         """Post-condition: stack storage is empty."""
+
+    # requests:
+    @abstractmethod
+    def peek(self) -> object:
+        """
+        Return last pushed item.
+        Pre-condition: stack storage is not empty.
+        """
+        return 0
+
+    @abstractmethod
+    def size(self) -> int:
+        """Return the number of items in the stack storage"""
+        return 0
 
 
