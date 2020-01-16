@@ -24,22 +24,54 @@ CONSTANTS
 
     PUSH_ERR = 2  # stack storage is full
 
+CONSTRUCTOR
+    __new__(cls, max_size: int) -> new bounded-stack instance
+        Post-condition:
+            created a new empty bounded-stack instance.
+
+        NOTE: __new__ is NOT abstract method. You shouldn't
+            need to override __new__. See:
+            https://mail.python.org/pipermail/tutor/2008-April/061426.html
+
+    __init__(self, max_size: int):
+        Initializing the instance after it's been created.
+        Post-condition:
+            The stack storage capacity is limited to *max_size* number of items
+
 """
 
 from abc import ABCMeta, abstractmethod
 
 
 class AbstractBoundedStack(metaclass=ABCMeta):
-    POP_NIL = 0  # pop() not called yet
-    POP_OK = 1   # last pop() call completed successfully
-    POP_ERR = 2  # stack storage is empty
-
     PEEK_NIL = 0  # peek() not called yet
     PEEK_OK = 1   # last peek() call returned correct item
     PEEK_ERR = 2  # stack storage is empty
 
+    POP_NIL = 0  # pop() not called yet
+    POP_OK = 1   # last pop() call completed successfully
+    POP_ERR = 2  # stack storage is empty
+
     PUSH_NIL = 0  # push() not called yet
     PUSH_OK = 1   # last push() call returned correct item
     PUSH_ERR = 2  # stack storage is full
+
+    # constructor
+    def __new__(cls, *args) -> object:
+        """
+        Create a class instance
+        Post-condition:
+            created a new empty stack instance
+
+        NOTE: __new__ is NOT abstract method. You shouldn't
+            need to override __new__. See:
+            https://mail.python.org/pipermail/tutor/2008-April/061426.html
+        """
+        new_instance = super().__new__(cls)
+        return new_instance
+
+    @abstractmethod
+    def __init__(self, max_size: int):
+        """Initializing the instance after it's been created"""
 
 
