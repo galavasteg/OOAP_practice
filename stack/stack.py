@@ -24,6 +24,16 @@ class Stack(AbstractStack):
         self.__peek_status = self.PEEK_NIL
         self.__pop_status = self.POP_NIL
 
+    def push(self, value: object):
+        self.__stack.append(value)
+
+    def pop(self):
+        if self.size() > 0:
+            _ = self.__stack.pop(-1)
+            self.__pop_status = self.POP_OK
+        else:
+            self.__pop_status = self.POP_ERR
+
     def clear(self):
         self.__init__()
 
