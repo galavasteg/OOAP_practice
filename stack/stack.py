@@ -12,3 +12,20 @@ class Stack(AbstractStack):
     PEEK_OK = 1   # last peek() call returned correct value
     PEEK_ERR = 2  # stack storage is empty
 
+    def __init__(self):
+        super().__init__()
+
+        # private attributes
+        self.__stack = None  # main stack storage
+        self.__peek_status = None  # last peek() call status
+        self.__pop_status = None  # last pop() call status
+
+        self.clear()
+
+    def clear(self):
+        self.__stack = []  # empty list
+
+        # initial statuses for peek() and pop() pre-conditions
+        self.__peek_status = self.PEEK_NIL
+        self.__pop_status = self.POP_NIL
+
