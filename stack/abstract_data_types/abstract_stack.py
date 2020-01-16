@@ -48,6 +48,11 @@ REQUESTS
 
     size(self) -> Return the number (int) of items in the stack storage
 
+ADDITIONAL REQUESTS
+    get_pop_status(self) -> Return status of last pop() call (POP_* constant)
+
+    get_peek_status(self) -> Return status of last peek() call (PEEK_* constant)
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -110,4 +115,14 @@ class AbstractStack(metaclass=ABCMeta):
         """Return the number of items in the stack storage"""
         return 0
 
+    # additional requests:
+    @abstractmethod
+    def get_pop_status(self) -> int:
+        """Return status of last pop() call:
+        one of the POP_* constants"""
+
+    @abstractmethod
+    def get_peek_status(self) -> int:
+        """Return status of last peek() call:
+        one of the PEEK_* constants"""
 
