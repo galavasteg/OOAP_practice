@@ -36,7 +36,8 @@ CONSTRUCTOR
     __init__(self, max_size: int):
         Initializing the instance after it's been created.
         Post-condition:
-            The stack storage capacity is limited to *max_size* number of items
+            The stack storage capacity is limited to *max_size* number
+            of items
 
 COMMANDS
     push(self, value)
@@ -54,6 +55,15 @@ COMMANDS
     clear(self)
         Post-condition:
             stack storage is empty.
+
+REQUESTS
+    peek(self) -> last pushed item
+        Pre-condition: stack storage is not empty
+
+    get_current_size(self) -> number of items in the stack storage
+
+    get_max_size(self) -> maximum possible number of items in the stack
+                          storage
 
 """
 
@@ -109,5 +119,25 @@ class AbstractBoundedStack(metaclass=ABCMeta):
     @abstractmethod
     def clear(self):
         """Post-condition: stack storage is empty."""
+
+    # requests:
+    @abstractmethod
+    def peek(self) -> object:
+        """
+        Return last pushed item.
+        Pre-condition: stack storage is not empty.
+        """
+        return 0
+
+    @abstractmethod
+    def get_current_size(self) -> int:
+        """Return the number of items on the stack storage"""
+        return 0
+
+    @abstractmethod
+    def get_max_size(self) -> int:
+        """Return the maximum possible number
+        of items in the stack storage"""
+        return 0
 
 
