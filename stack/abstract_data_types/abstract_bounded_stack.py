@@ -65,6 +65,13 @@ REQUESTS
     get_max_size(self) -> maximum possible number of items in the stack
                           storage
 
+ADDITIONAL REQUESTS
+    get_peek_status(self) -> status of last peek() call (PEEK_* constant)
+
+    get_pop_status(self) -> status of last pop() call (POP_* constant)
+
+    get_push_status(self) -> status of last push() call (PUSH_* constant)
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -140,4 +147,22 @@ class AbstractBoundedStack(metaclass=ABCMeta):
         of items in the stack storage"""
         return 0
 
+    # additional requests:
+    @abstractmethod
+    def get_peek_status(self) -> int:
+        """Return status of last peek() call:
+        one of the PEEK_* constants"""
+        return 0
+
+    @abstractmethod
+    def get_pop_status(self) -> int:
+        """Return status of last pop() call:
+        one of the POP_* constants"""
+        return 0
+
+    @abstractmethod
+    def get_push_status(self) -> int:
+        """Return status of last push() call:
+        one of the PUSH_* constants"""
+        return 0
 
