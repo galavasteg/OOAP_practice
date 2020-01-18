@@ -17,6 +17,29 @@ class BoundedStack(AbstractBoundedStack):
     PUSH_ERR = 2  # stack storage is full
 
     __DEFAULT_MAX_SIZE = 32
+    __type_error_msg = ('max_size is expected as a positive'
+                        ' integer, got: %s')
+    __value_error_msg = __type_error_msg
+
+    @classmethod
+    def __validate_max_size_type(cls, val: int):
+        is_int = isinstance(val, int)
+        if not is_int:
+            err_msg = (cls.__type_error_msg % val.__repr__())
+            raise TypeError(err_msg)
+
+    @classmethod
+    def __validate_max_size_value(cls, val: int):
+        is_positive_int = 0 < val
+        if not is_positive_int:
+            err_msg = (cls.__value_error_msg % val.__repr__())
+            raise ValueError(err_msg)
+
+    @classmethod
+    def __validate_max_size(cls, val: int):
+        if val is not None:
+            cls.__validate_max_size_type(val)
+            cls.__validate_max_size_value(val)
 
     def __init__(self, max_size: int = None):
         """The BoundedStack class implements AbstractBoundedStack.
@@ -26,7 +49,13 @@ class BoundedStack(AbstractBoundedStack):
             value can be changed by calling
             set_def_max_size(*new_default_val*) before creating
             the stack instance.
+
+        :raise TypeError, ValueError: The exceptions raise when
+            a *max_size* is not positive integer
         """
+
+        # check argument
+        self.__validate_max_size(max_size)
 
         super().__init__(max_size)
 
@@ -78,7 +107,11 @@ class BoundedStack(AbstractBoundedStack):
 
         :param value: maximum possible number of items in the
             stack storage
+
+        :raise TypeError, ValueError: The exceptions raise when
+            a *max_size* is not positive integer
         """
+        cls.__validate_max_size(value)
         cls.__DEFAULT_MAX_SIZE = value
 
     @classmethod
