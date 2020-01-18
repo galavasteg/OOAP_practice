@@ -40,4 +40,34 @@ class BoundedStack(AbstractBoundedStack):
         self.__pop_status = self.POP_NIL    # pop() last call status
         self.__push_status = self.PUSH_NIL  # push() last call status
 
+    def push(self, value: object):
+        if self.size < self.__max_size:
+            self.__stack.append(value)
+            self.__push_status = self.PUSH_OK
+        else:
+            self.__push_status = self.PUSH_ERR
+
+    def pop(self):
+        if self.size > 0:
+            _ = self.__stack.pop(-1)
+            self.__pop_status = self.POP_OK
+        else:
+            self.__pop_status = self.POP_ERR
+
+    def clear(self):
+        """Reset stack to initial state. *max_size* will
+        not be changed even if set_def_max_size() was
+        called earlier"""
+        max_size = self.get_max_size()
+        self.__init__(max_size)
+
+    def peek(self) -> object:
+        if self.size > 0:
+            result = self.__stack[-1]
+            self.__peek_status = self.PEEK_OK
+        else:
+            result = 0
+            self.__peek_status = self.PEEK_ERR
+        return result
+
 
