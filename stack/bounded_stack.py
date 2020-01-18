@@ -70,6 +70,21 @@ class BoundedStack(AbstractBoundedStack):
             self.__peek_status = self.PEEK_ERR
         return result
 
+    @classmethod
+    def set_def_max_size(cls, value: int):
+        """Set the default maximum possible number of items
+        in the stack storage. New *value* will be implemented
+        to stack-instances created after this command.
+
+        :param value: maximum possible number of items in the
+            stack storage
+        """
+        cls.__DEFAULT_MAX_SIZE = value
+
+    @classmethod
+    def get_def_max_size(cls) -> int:
+        return cls.__DEFAULT_MAX_SIZE
+
     def get_current_size(self) -> int:
         return len(self.__stack)
 
