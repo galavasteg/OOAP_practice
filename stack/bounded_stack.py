@@ -70,4 +70,23 @@ class BoundedStack(AbstractBoundedStack):
             self.__peek_status = self.PEEK_ERR
         return result
 
+    def get_current_size(self) -> int:
+        return len(self.__stack)
+
+    @property
+    def size(self):
+        return self.get_current_size()
+
+    def get_max_size(self) -> int:
+        return self.__max_size
+
+    # status requests
+    def get_pop_status(self) -> int:
+        return self.__pop_status
+
+    def get_peek_status(self) -> int:
+        return self.__peek_status
+
+    def get_push_status(self) -> int:
+        return self.__push_status
 
