@@ -18,4 +18,26 @@ class BoundedStack(AbstractBoundedStack):
 
     __DEFAULT_MAX_SIZE = 32
 
+    def __init__(self, max_size: int = None):
+        """The BoundedStack class implements AbstractBoundedStack.
+
+        :param max_size: (optional) maximum possible number of
+            items in the stack storage. 32 by default. The default
+            value can be changed by calling
+            set_def_max_size(*new_default_val*) before creating
+            the stack instance.
+        """
+
+        super().__init__(max_size)
+
+        # private attributes
+        self.__max_size = (self.__DEFAULT_MAX_SIZE if max_size is None
+                           else max_size)  # stack storage size limit
+        self.__stack = []  # empty list main stack storage
+
+        # initial statuses for peek(), pop() and push() pre-conditions
+        self.__peek_status = self.PEEK_NIL  # peek() last call status
+        self.__pop_status = self.POP_NIL    # pop() last call status
+        self.__push_status = self.PUSH_NIL  # push() last call status
+
 
