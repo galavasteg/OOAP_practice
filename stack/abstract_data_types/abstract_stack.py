@@ -19,10 +19,6 @@ CONSTRUCTOR
         Post-condition:
             created a new empty stack instance.
 
-        NOTE: __new__ is NOT abstract method. You shouldn't
-            need to override __new__. See:
-            https://mail.python.org/pipermail/tutor/2008-April/061426.html
-
     __init__(self):
         Initializing the instance after it's been created.
 

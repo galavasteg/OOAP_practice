@@ -29,10 +29,6 @@ CONSTRUCTOR
         Post-condition:
             created a new empty bounded-stack instance.
 
-        NOTE: __new__ is NOT abstract method. You shouldn't
-            need to override __new__. See:
-            https://mail.python.org/pipermail/tutor/2008-April/061426.html
-
     __init__(self, max_size: int):
         Initializing the instance after it's been created.
         Post-condition:
@@ -96,10 +92,6 @@ class AbstractBoundedStack(metaclass=ABCMeta):
         Create a class instance
         Post-condition:
             created a new empty stack instance
-
-        NOTE: __new__ is NOT abstract method. You shouldn't
-            need to override __new__. See:
-            https://mail.python.org/pipermail/tutor/2008-April/061426.html
         """
         new_instance = super().__new__(cls)
         return new_instance
