@@ -47,6 +47,29 @@ COMMANDS
         Post-condition:
             cursor is on the node to the right.
 
+    put_right(self, value: object) - Put a new node with the *value* to
+                                     the right of the node the cursor on.
+        Pre-condition:
+            storage is not empty.
+        Post-condition:
+            a new node with the *value* is in the storage to the right of
+            the node the cursor on.
+
+    put_left(self, value: object) - Put a new node with the *value* to
+                                    the left of the node the cursor on.
+        Pre-condition:
+            storage is not empty.
+        Post-condition:
+            a new node with the *value*
+            is in the storage to the left of
+            the node the cursor on.
+
+    def remove(self) - Remove the node the cursor on from the storage.
+                       The cursor sets to the right (priority) or
+                       to the left node if they exist.
+        Pre-condition:
+            storage is not empty.
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -66,6 +89,17 @@ class AbstractLinkedList(metaclass=ABCMeta):
     RIGHT_EMPTY_ERR = 2  # storage is empty
     RIGHT_TAIL_ERR = 3   # cursor is on the last node
 
+    PUT_RIGHT_NIL = 0  # put_right() not called yet
+    PUT_RIGHT_OK = 1   # last put_right() call completed successfully
+    PUT_RIGHT_ERR = 2  # storage is empty
+
+    PUT_LEFT_NIL = 0  # put_left() not called yet
+    PUT_LEFT_OK = 1   # last put_left() call completed successfully
+    PUT_LEFT_ERR = 2  # storage is empty
+
+    REMOVE_NIL = 0  # remove() not called yet
+    REMOVE_OK = 1   # last remove() call completed successfully
+    REMOVE_ERR = 2  # storage is empty
 
     # constructor
     def __new__(cls) -> object:
@@ -105,5 +139,36 @@ class AbstractLinkedList(metaclass=ABCMeta):
             - storage is not empty.
             - cursor is not on the last node;
         Post-condition: cursor is on the node to the right.
+        """
+
+    @abstractmethod
+    def put_right(self, value: object):
+        """
+        Put a new node with the *value* to the right
+        of the node the cursor on.
+        Pre-condition: storage is not empty.
+        Post-condition: a new node with the *value*
+            is in the storage to the right of
+            the node the cursor on.
+        """
+
+    @abstractmethod
+    def put_left(self, value: object):
+        """
+        Put a new node with the *value* to the left
+        of the node the cursor on.
+        Pre-condition: storage is not empty.
+        Post-condition: a new node with the *value*
+            is in the storage to the left of
+            the node the cursor on.
+        """
+
+    @abstractmethod
+    def remove(self):
+        """
+        Remove the node the cursor on from the storage.
+        The cursor sets to the right (priority) or
+        to the left node if they exist.
+        Pre-condition: storage is not empty.
         """
 
