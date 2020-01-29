@@ -115,6 +115,11 @@ REQUESTS
 
     get_size(self) -> number of items in the storage
 
+ADDITIONAL REQUESTS
+    is_head(self) - the cursor is on the 1st storage item?
+    is_tail(self) - the cursor is on the last storage item?
+    is_value(self) - the cursor is on the node?
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -281,4 +286,22 @@ class AbstractLinkedList(metaclass=ABCMeta):
     def get_size(self) -> int:
         """Return the number of items in the storage"""
         return 0
+
+    # additional requests:
+    @abstractmethod
+    def is_head(self) -> bool:
+        """Return True if the cursor is on the 1st
+        storage item."""
+        return False
+
+    @abstractmethod
+    def is_tail(self) -> bool:
+        """Return True if the cursor is on the last
+        storage item."""
+        return False
+
+    @abstractmethod
+    def is_value(self) -> bool:
+        """Return True if the cursor is on the node."""
+        return False
 
