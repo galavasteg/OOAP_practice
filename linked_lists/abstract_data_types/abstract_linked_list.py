@@ -16,6 +16,22 @@ CONSTANTS
     RIGHT_EMPTY_ERR = 2  # storage is empty
     RIGHT_TAIL_ERR = 3   # cursor is on the last node
 
+    PUT_RIGHT_NIL = 0  # put_right() not called yet
+    PUT_RIGHT_OK = 1   # last put_right() call completed successfully
+    PUT_RIGHT_ERR = 2  # storage is empty
+
+    PUT_LEFT_NIL = 0  # put_left() not called yet
+    PUT_LEFT_OK = 1   # last put_left() call completed successfully
+    PUT_LEFT_ERR = 2  # storage is empty
+
+    REMOVE_NIL = 0  # remove() not called yet
+    REMOVE_OK = 1   # last remove() call completed successfully
+    REMOVE_ERR = 2  # storage is empty
+
+    GET_NIL = 0  # get() not called yet
+    GET_OK = 1   # last get() call returned correct item
+    GET_ERR = 2  # storage is empty
+
     REPLACE_NIL = 0  # replace() not called yet
     REPLACE_OK = 1   # last replace() call completed successfully
     REPLACE_ERR = 2  # storage is empty
@@ -119,6 +135,19 @@ ADDITIONAL REQUESTS
     is_head(self) - the cursor is on the 1st storage item?
     is_tail(self) - the cursor is on the last storage item?
     is_value(self) - the cursor is on the node?
+
+STATUS REQUESTS
+    get_head_status(self) - status of last head() call (PUSH_* constant)
+    get_tail_status(self) - status of last tail() call (TAIL_* constant)
+    get_right_status(self) - status of last right() call (RIGHT_* constant)
+    get_put_right_status(self) - status of last put_right() call (PUT_RIGHT_* constant)
+    get_put_left_status(self) - status of last put_left() call (PUT_LEFT_* constant)
+    get_remove_status(self) - status of last remove() call (REMOVE_* constant)
+    # ¯\_(ツ)_/¯
+    get_get_status(self) - status of last get() call (GET_* constant)
+    get_replace_status(self) - status of last replace() call (REPLACE_* constant)
+    get_find_status(self) - status of last find() call (FIND_* constant)
+    get_remove_all_status(self) - status of last remove_all() call (REMOVE_ALL_* constant)
 
 """
 
@@ -304,4 +333,65 @@ class AbstractLinkedList(metaclass=ABCMeta):
     def is_value(self) -> bool:
         """Return True if the cursor is on the node."""
         return False
+
+    # command statuses requests:
+    @abstractmethod
+    def get_head_status(self) -> int:
+        """Return status of last head() call:
+        one of the HEAD_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_tail_status(self) -> int:
+        """Return status of last tail() call:
+        one of the TAIL_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_right_status(self) -> int:
+        """Return status of last right() call:
+        one of the RIGHT_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_put_right_status(self) -> int:
+        """Return status of last put_right() call:
+        one of the PUT_RIGHT_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_put_left_status(self) -> int:
+        """Return status of last put_left() call:
+        one of the PUT_LEFT_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_remove_status(self) -> int:
+        """Return status of last remove() call:
+        one of the REMOVE_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_get_status(self) -> int:
+        """Return status of last get() call:
+        one of the GET_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_replace_status(self) -> int:
+        """Return status of last replace() call:
+        one of the REPLACE_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_find_status(self) -> int:
+        """Return status of last find() call:
+        one of the FIND_* constants."""
+        return 0
+
+    @abstractmethod
+    def get_remove_all_status(self) -> int:
+        """Return status of last remove_all() call:
+        one of the REMOVE_ALL* constants."""
+        return 0
 
