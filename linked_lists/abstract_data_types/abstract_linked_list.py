@@ -16,6 +16,20 @@ CONSTANTS
     RIGHT_EMPTY_ERR = 2  # storage is empty
     RIGHT_TAIL_ERR = 3   # cursor is on the last node
 
+    REPLACE_NIL = 0  # replace() not called yet
+    REPLACE_OK = 1   # last replace() call completed successfully
+    REPLACE_ERR = 2  # storage is empty
+
+    FIND_NIL = 0           # find() not called yet
+    FIND_OK = 1            # last find() call completed successfully
+    FIND_EMPTY_ERR = 2     # storage is empty
+    FIND_NOTFOUND_ERR = 3  # there is no next node with the *value*
+
+    REMOVE_ALL_NIL = 0           # remove_all() not called yet
+    REMOVE_ALL_OK = 1            # last remove_all() completed successfully
+    REMOVE_ALL_EMPTY_ERR = 2     # storage is empty
+    REMOVE_ALL_NOTFOUND_ERR = 3  # there are no nodes with the *value*
+
 CONSTRUCTOR
     __new__(cls, max_size: int) -> new linked-list instance
         Post-condition:
@@ -70,6 +84,26 @@ COMMANDS
         Pre-condition:
             storage is not empty.
 
+ADDITIONAL COMMANDS
+    add_tail(self, value: object) - Add a new node with the *value*
+                                    to the storage as the last item.
+
+    replace(self, value: object) - Place a new *value* to the node
+                                   the cursor on.
+        Pre-condition:
+            storage is not empty.
+
+    find(self, value: object) - Set the cursor to the next node
+                                with the searched *value* relative
+                                to the node the cursor on.
+        Pre-condition:
+            storage is not empty.
+
+    remove_all(self, value: object) - Remove all nodes with the *value*
+                                      from the storage.
+        Pre-condition:
+            storage is not empty.
+
 REQUESTS
     get(self) -> value of the node the cursor on
         Pre-condition:
@@ -111,6 +145,20 @@ class AbstractLinkedList(metaclass=ABCMeta):
     GET_NIL = 0  # get() not called yet
     GET_OK = 1   # last get() call returned correct item
     GET_ERR = 2  # storage is empty
+
+    REPLACE_NIL = 0  # replace() not called yet
+    REPLACE_OK = 1   # last replace() call completed successfully
+    REPLACE_ERR = 2  # storage is empty
+
+    FIND_NIL = 0           # find() not called yet
+    FIND_OK = 1            # last find() call completed successfully
+    FIND_EMPTY_ERR = 2     # storage is empty
+    FIND_NOTFOUND_ERR = 3  # there is no next node with the *value*
+
+    REMOVE_ALL_NIL = 0           # remove_all() not called yet
+    REMOVE_ALL_OK = 1            # last remove_all() completed successfully
+    REMOVE_ALL_EMPTY_ERR = 2     # storage is empty
+    REMOVE_ALL_NOTFOUND_ERR = 3  # there are no nodes with the *value*
 
     # constructor
     def __new__(cls) -> object:
@@ -180,6 +228,35 @@ class AbstractLinkedList(metaclass=ABCMeta):
         Remove the node the cursor on from the storage.
         The cursor sets to the right (priority) or
         to the left node if they exist.
+        Pre-condition: storage is not empty.
+        """
+
+    # additional commands:
+    @abstractmethod
+    def add_tail(self, value: object):
+        """Add a new node with the *value* to the storage
+        as the last item."""
+
+    @abstractmethod
+    def replace(self, value: object):
+        """
+        Place a new *value* to the node the cursor on.
+        Pre-condition: storage is not empty.
+        """
+
+    @abstractmethod
+    def find(self, value: object):
+        """
+        Set the cursor to the next node with the
+        searched *value* relative to the node
+        the cursor on.
+        Pre-condition: storage is not empty.
+        """
+
+    @abstractmethod
+    def remove_all(self, value: object):
+        """
+        Remove all nodes with the *value* from the storage.
         Pre-condition: storage is not empty.
         """
 
