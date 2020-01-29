@@ -37,9 +37,9 @@ CONSTANTS
     REPLACE_EMPTY_ERR = 2  # storage is empty
 
     FIND_NIL = 0        # find() not called yet
-    FIND_OK = 1         # last find() call completed successfully
-    FIND_NOT_FOUND = 2  # there is no next node with the *value*
-    FIND_EMPTY_ERR = 3  # storage is empty
+    FIND_OK = 1         # last find() call set the cursor to the next found node
+    FIND_NOT_FOUND = 2  # last find() call found nothing
+    FIND_EMPTY = 3      # storage is empty
 
     REMOVE_ALL_NIL = 0      # remove_all() not called yet
     REMOVE_ALL_OK = 1       # last remove_all() call remove items from storage
@@ -98,6 +98,10 @@ COMMANDS
                    to the left node if they exist.
         Pre-condition:
             storage is not empty.
+        Post-condition:
+            - the node the cursor on removed from the storage
+            - the cursor set to the right (priority) or
+              to the left node if they exist.
 
     clear(self)
         Post-condition:
@@ -106,20 +110,28 @@ COMMANDS
 ADDITIONAL COMMANDS
     add_tail(self, value: object) - Add a new node with the *value*
                                     to the storage as the last item.
+        Post-condition:
+            a new node with the *value* added to the storage as the
+            last item.
 
     replace(self, value: object) - Place a new *value* to the node
                                    the cursor on.
         Pre-condition:
             storage is not empty.
+        Post-condition:
+            the node the cursor on contain a new *value*
 
     find(self, value: object) - Set the cursor to the next node
                                 with the searched *value* relative
                                 to the node the cursor on.
-        Pre-condition:
-            storage is not empty.
+        Post-condition:
+            the cursor set to the next node with the searched
+            *value* relative to the node the cursor on.
 
     remove_all(self, value: object) - Remove all nodes with the *value*
                                       from the storage.
+        Post-condition:
+            all nodes with the *value* removed from the storage.
 
 REQUESTS
     get(self) -> value of the node the cursor on
@@ -210,9 +222,9 @@ class AbstractLinkedList(metaclass=ABCMeta):
     REPLACE_EMPTY_ERR = 2  # storage is empty
 
     FIND_NIL = 0        # find() not called yet
-    FIND_OK = 1         # last find() call completed successfully
-    FIND_NOT_FOUND = 2  # there is no next node with the *value*
-    FIND_EMPTY_ERR = 3  # storage is empty
+    FIND_OK = 1         # last find() call set the cursor to the next found node
+    FIND_NOT_FOUND = 2  # last find() call found nothing
+    FIND_EMPTY = 3      # storage is empty
 
     REMOVE_ALL_NIL = 0      # remove_all() not called yet
     REMOVE_ALL_OK = 1       # last remove_all() call remove items from storage
@@ -287,6 +299,10 @@ class AbstractLinkedList(metaclass=ABCMeta):
         The cursor sets to the right (priority) or
         to the left node if they exist.
         Pre-condition: storage is not empty.
+        Post-condition:
+            - the node the cursor on removed from the storage
+            - the cursor set to the right (priority) or
+              to the left node if they exist.
         """
 
     @abstractmethod
@@ -312,12 +328,18 @@ class AbstractLinkedList(metaclass=ABCMeta):
         Set the cursor to the next node with the
         searched *value* relative to the node
         the cursor on.
-        Pre-condition: storage is not empty.
+        Post-condition:
+            the cursor set to the next node with the searched
+            *value* relative to the node the cursor on.
         """
 
     @abstractmethod
     def remove_all(self, value: object):
-        """Remove all nodes with the *value* from the storage."""
+        """
+        Remove all nodes with the *value* from the storage.
+        Post-condition:
+            all nodes with the *value* removed from the storage.
+        """
 
     # requests:
     @abstractmethod
