@@ -78,11 +78,15 @@ COMMANDS
             is in the storage to the left of
             the node the cursor on.
 
-    def remove(self) - Remove the node the cursor on from the storage.
-                       The cursor sets to the right (priority) or
-                       to the left node if they exist.
+    remove(self) - Remove the node the cursor on from the storage.
+                   The cursor sets to the right (priority) or
+                   to the left node if they exist.
         Pre-condition:
             storage is not empty.
+
+    clear(self)
+        Post-condition:
+            storage is empty.
 
 ADDITIONAL COMMANDS
     add_tail(self, value: object) - Add a new node with the *value*
@@ -230,6 +234,10 @@ class AbstractLinkedList(metaclass=ABCMeta):
         to the left node if they exist.
         Pre-condition: storage is not empty.
         """
+
+    @abstractmethod
+    def clear(self):
+        """Post-condition: storage is empty."""
 
     # additional commands:
     @abstractmethod
