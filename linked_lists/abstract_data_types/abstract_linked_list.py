@@ -70,6 +70,13 @@ COMMANDS
         Pre-condition:
             storage is not empty.
 
+REQUESTS
+    get(self) -> value of the node the cursor on
+        Pre-condition:
+            storage is not empty.
+
+    get_size(self) -> number of items in the storage
+
 """
 
 from abc import ABCMeta, abstractmethod
@@ -100,6 +107,10 @@ class AbstractLinkedList(metaclass=ABCMeta):
     REMOVE_NIL = 0  # remove() not called yet
     REMOVE_OK = 1   # last remove() call completed successfully
     REMOVE_ERR = 2  # storage is empty
+
+    GET_NIL = 0  # get() not called yet
+    GET_OK = 1   # last get() call returned correct item
+    GET_ERR = 2  # storage is empty
 
     # constructor
     def __new__(cls) -> object:
@@ -171,4 +182,18 @@ class AbstractLinkedList(metaclass=ABCMeta):
         to the left node if they exist.
         Pre-condition: storage is not empty.
         """
+
+    # requests:
+    @abstractmethod
+    def get(self) -> object:
+        """
+        Get the value of node the cursor on.
+        Pre-condition: storage is not empty.
+        """
+        return 0
+
+    @abstractmethod
+    def get_size(self) -> int:
+        """Return the number of items in the storage"""
+        return 0
 
