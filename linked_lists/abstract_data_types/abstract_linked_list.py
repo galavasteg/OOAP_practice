@@ -3,48 +3,47 @@ AbstractLinkedList is an abstract data type for
 implementing a linked list.
 
 CONSTANTS
-    HEAD_NIL = 0  # head() not called yet
-    HEAD_OK = 1   # last head() call completed successfully
-    HEAD_ERR = 2  # storage is empty
+    HEAD_NIL = 0        # head() not called yet
+    HEAD_OK = 1         # last head() call completed successfully
+    HEAD_EMPTY_ERR = 2  # storage is empty
 
-    TAIL_NIL = 0  # tail() not called yet
-    TAIL_OK = 1   # last tail() call completed successfully
-    TAIL_ERR = 2  # storage is empty
+    TAIL_NIL = 0        # tail() not called yet
+    TAIL_OK = 1         # last tail() call completed successfully
+    TAIL_EMPTY_ERR = 2  # storage is empty
 
     RIGHT_NIL = 0        # right() not called yet
     RIGHT_OK = 1         # last right() call completed successfully
     RIGHT_EMPTY_ERR = 2  # storage is empty
     RIGHT_TAIL_ERR = 3   # cursor is on the last node
 
-    PUT_RIGHT_NIL = 0  # put_right() not called yet
-    PUT_RIGHT_OK = 1   # last put_right() call completed successfully
-    PUT_RIGHT_ERR = 2  # storage is empty
+    PUT_RIGHT_NIL = 0        # put_right() not called yet
+    PUT_RIGHT_OK = 1         # last put_right() call completed successfully
+    PUT_RIGHT_EMPTY_ERR = 2  # storage is empty
 
-    PUT_LEFT_NIL = 0  # put_left() not called yet
-    PUT_LEFT_OK = 1   # last put_left() call completed successfully
-    PUT_LEFT_ERR = 2  # storage is empty
+    PUT_LEFT_NIL = 0        # put_left() not called yet
+    PUT_LEFT_OK = 1         # last put_left() call completed successfully
+    PUT_LEFT_EMPTY_ERR = 2  # storage is empty
 
-    REMOVE_NIL = 0  # remove() not called yet
-    REMOVE_OK = 1   # last remove() call completed successfully
-    REMOVE_ERR = 2  # storage is empty
+    REMOVE_NIL = 0        # remove() not called yet
+    REMOVE_OK = 1         # last remove() call completed successfully
+    REMOVE_EMPTY_ERR = 2  # storage is empty
 
-    GET_NIL = 0  # get() not called yet
-    GET_OK = 1   # last get() call returned correct item
-    GET_ERR = 2  # storage is empty
+    GET_NIL = 0        # get() not called yet
+    GET_OK = 1         # last get() call returned correct item
+    GET_EMPTY_ERR = 2  # storage is empty
 
-    REPLACE_NIL = 0  # replace() not called yet
-    REPLACE_OK = 1   # last replace() call completed successfully
-    REPLACE_ERR = 2  # storage is empty
+    REPLACE_NIL = 0        # replace() not called yet
+    REPLACE_OK = 1         # last replace() call completed successfully
+    REPLACE_EMPTY_ERR = 2  # storage is empty
 
-    FIND_NIL = 0           # find() not called yet
-    FIND_OK = 1            # last find() call completed successfully
-    FIND_EMPTY_ERR = 2     # storage is empty
-    FIND_NOTFOUND_ERR = 3  # there is no next node with the *value*
+    FIND_NIL = 0        # find() not called yet
+    FIND_OK = 1         # last find() call set the cursor to the next found node
+    FIND_NOT_FOUND = 2  # last find() call found nothing
+    FIND_EMPTY = 3      # storage is empty
 
-    REMOVE_ALL_NIL = 0           # remove_all() not called yet
-    REMOVE_ALL_OK = 1            # last remove_all() completed successfully
-    REMOVE_ALL_EMPTY_ERR = 2     # storage is empty
-    REMOVE_ALL_NOTFOUND_ERR = 3  # there are no nodes with the *value*
+    REMOVE_ALL_NIL = 0      # remove_all() not called yet
+    REMOVE_ALL_OK = 1       # last remove_all() call remove items from storage
+    REMOVE_ALL_NOTHING = 2  # last remove_all() call remove nothing
 
 CONSTRUCTOR
     __new__(cls, max_size: int) -> new linked-list instance
@@ -99,6 +98,10 @@ COMMANDS
                    to the left node if they exist.
         Pre-condition:
             storage is not empty.
+        Post-condition:
+            - the node the cursor on removed from the storage
+            - the cursor set to the right (priority) or
+              to the left node if they exist.
 
     clear(self)
         Post-condition:
@@ -107,22 +110,28 @@ COMMANDS
 ADDITIONAL COMMANDS
     add_tail(self, value: object) - Add a new node with the *value*
                                     to the storage as the last item.
+        Post-condition:
+            a new node with the *value* added to the storage as the
+            last item.
 
     replace(self, value: object) - Place a new *value* to the node
                                    the cursor on.
         Pre-condition:
             storage is not empty.
+        Post-condition:
+            the node the cursor on contain a new *value*
 
     find(self, value: object) - Set the cursor to the next node
                                 with the searched *value* relative
                                 to the node the cursor on.
-        Pre-condition:
-            storage is not empty.
+        Post-condition:
+            the cursor set to the next node with the searched
+            *value* relative to the node the cursor on.
 
     remove_all(self, value: object) - Remove all nodes with the *value*
                                       from the storage.
-        Pre-condition:
-            storage is not empty.
+        Post-condition:
+            all nodes with the *value* removed from the storage.
 
 REQUESTS
     get(self) -> value of the node the cursor on
@@ -135,6 +144,7 @@ ADDITIONAL REQUESTS
     is_head(self) - the cursor is on the 1st storage item?
     is_tail(self) - the cursor is on the last storage item?
     is_value(self) - the cursor is on the node?
+                     (equivalent) is the storage not empty?
 
 STATUS REQUESTS
     get_head_status(self) - status of last head() call (PUSH_* constant)
@@ -143,7 +153,6 @@ STATUS REQUESTS
     get_put_right_status(self) - status of last put_right() call (PUT_RIGHT_* constant)
     get_put_left_status(self) - status of last put_left() call (PUT_LEFT_* constant)
     get_remove_status(self) - status of last remove() call (REMOVE_* constant)
-    # ¯\_(ツ)_/¯
     get_get_status(self) - status of last get() call (GET_* constant)
     get_replace_status(self) - status of last replace() call (REPLACE_* constant)
     get_find_status(self) - status of last find() call (FIND_* constant)
@@ -180,48 +189,49 @@ from abc import ABCMeta, abstractmethod
 
 
 class AbstractLinkedList(metaclass=ABCMeta):
-    HEAD_NIL = 0  # head() not called yet
-    HEAD_OK = 1   # last head() call completed successfully
-    HEAD_ERR = 2  # storage is empty
+    HEAD_NIL = 0        # head() not called yet
+    HEAD_OK = 1         # last head() call completed successfully
+    HEAD_EMPTY_ERR = 2  # storage is empty
 
-    TAIL_NIL = 0  # tail() not called yet
-    TAIL_OK = 1   # last tail() call completed successfully
-    TAIL_ERR = 2  # storage is empty
+    TAIL_NIL = 0        # tail() not called yet
+    TAIL_OK = 1         # last tail() call completed successfully
+    TAIL_EMPTY_ERR = 2  # storage is empty
 
     RIGHT_NIL = 0        # right() not called yet
     RIGHT_OK = 1         # last right() call completed successfully
     RIGHT_EMPTY_ERR = 2  # storage is empty
     RIGHT_TAIL_ERR = 3   # cursor is on the last node
 
-    PUT_RIGHT_NIL = 0  # put_right() not called yet
-    PUT_RIGHT_OK = 1   # last put_right() call completed successfully
-    PUT_RIGHT_ERR = 2  # storage is empty
+    PUT_RIGHT_NIL = 0        # put_right() not called yet
+    PUT_RIGHT_OK = 1         # last put_right() call completed successfully
+    PUT_RIGHT_EMPTY_ERR = 2  # storage is empty
 
-    PUT_LEFT_NIL = 0  # put_left() not called yet
-    PUT_LEFT_OK = 1   # last put_left() call completed successfully
-    PUT_LEFT_ERR = 2  # storage is empty
+    PUT_LEFT_NIL = 0        # put_left() not called yet
+    PUT_LEFT_OK = 1         # last put_left() call completed successfully
+    PUT_LEFT_EMPTY_ERR = 2  # storage is empty
 
-    REMOVE_NIL = 0  # remove() not called yet
-    REMOVE_OK = 1   # last remove() call completed successfully
-    REMOVE_ERR = 2  # storage is empty
+    REMOVE_NIL = 0        # remove() not called yet
+    REMOVE_OK_RIGHT = 1   # item remove()'ed successfully, cursor set to right node
+    REMOVE_OK_LEFT = 2    # item remove()'ed successfully, cursor set to left node
+    REMOVE_OK_EMPTY = 3   # item remove()'ed successfully, cursor not set: storage is empty
+    REMOVE_EMPTY_ERR = 4  # storage is empty
 
-    GET_NIL = 0  # get() not called yet
-    GET_OK = 1   # last get() call returned correct item
-    GET_ERR = 2  # storage is empty
+    GET_NIL = 0        # get() not called yet
+    GET_OK = 1         # last get() call returned correct item
+    GET_EMPTY_ERR = 2  # storage is empty
 
-    REPLACE_NIL = 0  # replace() not called yet
-    REPLACE_OK = 1   # last replace() call completed successfully
-    REPLACE_ERR = 2  # storage is empty
+    REPLACE_NIL = 0        # replace() not called yet
+    REPLACE_OK = 1         # last replace() call completed successfully
+    REPLACE_EMPTY_ERR = 2  # storage is empty
 
-    FIND_NIL = 0           # find() not called yet
-    FIND_OK = 1            # last find() call completed successfully
-    FIND_EMPTY_ERR = 2     # storage is empty
-    FIND_NOTFOUND_ERR = 3  # there is no next node with the *value*
+    FIND_NIL = 0        # find() not called yet
+    FIND_OK = 1         # last find() call set the cursor to the next found node
+    FIND_EMPTY = 2      # storage is empty
+    FIND_NOT_FOUND = 3  # there is no next node with the *value*
 
-    REMOVE_ALL_NIL = 0           # remove_all() not called yet
-    REMOVE_ALL_OK = 1            # last remove_all() completed successfully
-    REMOVE_ALL_EMPTY_ERR = 2     # storage is empty
-    REMOVE_ALL_NOTFOUND_ERR = 3  # there are no nodes with the *value*
+    REMOVE_ALL_NIL = 0      # remove_all() not called yet
+    REMOVE_ALL_OK = 1       # last remove_all() call remove items from storage
+    REMOVE_ALL_NOTHING = 2  # last remove_all() call remove nothing
 
     # constructor
     def __new__(cls) -> object:
@@ -292,6 +302,10 @@ class AbstractLinkedList(metaclass=ABCMeta):
         The cursor sets to the right (priority) or
         to the left node if they exist.
         Pre-condition: storage is not empty.
+        Post-condition:
+            - the node the cursor on removed from the storage
+            - the cursor set to the right (priority) or
+              to the left node if they exist.
         """
 
     @abstractmethod
@@ -317,14 +331,17 @@ class AbstractLinkedList(metaclass=ABCMeta):
         Set the cursor to the next node with the
         searched *value* relative to the node
         the cursor on.
-        Pre-condition: storage is not empty.
+        Post-condition:
+            the cursor set to the next node with the searched
+            *value* relative to the node the cursor on.
         """
 
     @abstractmethod
     def remove_all(self, value: object):
         """
         Remove all nodes with the *value* from the storage.
-        Pre-condition: storage is not empty.
+        Post-condition:
+            all nodes with the *value* removed from the storage.
         """
 
     # requests:
@@ -356,7 +373,8 @@ class AbstractLinkedList(metaclass=ABCMeta):
 
     @abstractmethod
     def is_value(self) -> bool:
-        """Return True if the cursor is on the node."""
+        """Return True if the cursor is on the node.
+        Can be used to check the storage is not empty."""
         return False
 
     # command statuses requests:
