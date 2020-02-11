@@ -1,3 +1,4 @@
+from random import choice
 import unittest
 
 from linked_lists.lists import LinkedList, TwoWayList
@@ -5,6 +6,7 @@ from linked_lists.lists import LinkedList, TwoWayList
 
 class __ParentListTestsMixin:
     linked_list_cls = None
+    cursor_cmds = ()
 
     @classmethod
     def _get_filled_list(cls, *vals) -> linked_list_cls:
@@ -247,13 +249,29 @@ class __ParentListTestsMixin:
         expected_size = len(vals)
         self.assertEqual(list_.get_size(), expected_size)
 
+    def test_fill_and_empty(self):
+        big_list = self.linked_list_cls()
+
+        n = 10000
+        for v in range(n):
+            big_list.add_tail(v)
+        self.assertEqual(big_list.get_size(), n)
+        for _ in range(n):
+            cursor_random_move = choice(self.cursor_cmds)
+            getattr(big_list, cursor_random_move)()
+            big_list.remove()
+
+        self.assertEqual(big_list.get_size(), 0)
+
 
 class LinkedListTests(__ParentListTestsMixin, unittest.TestCase):
     linked_list_cls = LinkedList
+    cursor_cmds = ('tail', 'head', 'right')
 
 
 class TwoWayListTests(__ParentListTestsMixin, unittest.TestCase):
     linked_list_cls = TwoWayList
+    cursor_cmds = ('tail', 'head', 'right', 'left')
 
     def _check_initial_state(self, list_: linked_list_cls):
         _ = list_
