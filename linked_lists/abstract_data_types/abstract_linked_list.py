@@ -144,6 +144,7 @@ ADDITIONAL REQUESTS
     is_head(self) - the cursor is on the 1st storage item?
     is_tail(self) - the cursor is on the last storage item?
     is_value(self) - the cursor is on the node?
+                     (equivalent) is the storage not empty?
 
 STATUS REQUESTS
     get_head_status(self) - status of last head() call (PUSH_* constant)
@@ -210,8 +211,10 @@ class AbstractLinkedList(metaclass=ABCMeta):
     PUT_LEFT_EMPTY_ERR = 2  # storage is empty
 
     REMOVE_NIL = 0        # remove() not called yet
-    REMOVE_OK = 1         # last remove() call completed successfully
-    REMOVE_EMPTY_ERR = 2  # storage is empty
+    REMOVE_OK_RIGHT = 1   # item remove()'ed successfully, cursor set to right node
+    REMOVE_OK_LEFT = 2    # item remove()'ed successfully, cursor set to left node
+    REMOVE_OK_EMPTY = 3   # item remove()'ed successfully, cursor not set: storage is empty
+    REMOVE_EMPTY_ERR = 4  # storage is empty
 
     GET_NIL = 0        # get() not called yet
     GET_OK = 1         # last get() call returned correct item
@@ -223,8 +226,8 @@ class AbstractLinkedList(metaclass=ABCMeta):
 
     FIND_NIL = 0        # find() not called yet
     FIND_OK = 1         # last find() call set the cursor to the next found node
-    FIND_NOT_FOUND = 2  # last find() call found nothing
-    FIND_EMPTY = 3      # storage is empty
+    FIND_EMPTY = 2      # storage is empty
+    FIND_NOT_FOUND = 3  # there is no next node with the *value*
 
     REMOVE_ALL_NIL = 0      # remove_all() not called yet
     REMOVE_ALL_OK = 1       # last remove_all() call remove items from storage
@@ -370,7 +373,8 @@ class AbstractLinkedList(metaclass=ABCMeta):
 
     @abstractmethod
     def is_value(self) -> bool:
-        """Return True if the cursor is on the node."""
+        """Return True if the cursor is on the node.
+        Can be used to check the storage is not empty."""
         return False
 
     # command statuses requests:
