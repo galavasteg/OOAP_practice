@@ -6,6 +6,7 @@ from .abstract_data_types.abstract_linked_list import (
 
 
 class __ParentList(_BaseAbstractLinkedList):
+
     def __init__(self):
         """Implementation of an AbstractLinkedList."""
         super().__init__()
@@ -220,10 +221,6 @@ class LinkedList(__ParentList, AbstractLinkedList):
 
 
 class TwoWayList(__ParentList, AbstractTwoWayList):
-    LEFT_NIL = 0        # left() not called yet
-    LEFT_OK = 1         # last left() call completed successfully
-    LEFT_EMPTY_ERR = 2  # storage is empty
-    LEFT_HEAD_ERR = 3   # cursor is on the 1st node
 
     def __init__(self):
         super().__init__()
