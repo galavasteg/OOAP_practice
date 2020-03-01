@@ -188,7 +188,7 @@ tail() достичь такой эффективности  можно прям
 from abc import ABCMeta, abstractmethod
 
 
-class AbstractLinkedList(metaclass=ABCMeta):
+class _BaseAbstractLinkedList(metaclass=ABCMeta):
     HEAD_NIL = 0        # head() not called yet
     HEAD_OK = 1         # last head() call completed successfully
     HEAD_EMPTY_ERR = 2  # storage is empty
@@ -436,5 +436,30 @@ class AbstractLinkedList(metaclass=ABCMeta):
     def get_remove_all_status(self) -> int:
         """Return status of last remove_all() call:
         one of the REMOVE_ALL* constants."""
+        return 0
+
+
+class AbstractLinkedList(_BaseAbstractLinkedList):
+    ...
+
+
+class AbstractTwoWayList(_BaseAbstractLinkedList):
+    LEFT_NIL = 0        # left() not called yet
+    LEFT_OK = 1         # last left() call completed successfully
+    LEFT_EMPTY_ERR = 2  # storage is empty
+    LEFT_HEAD_ERR = 3   # cursor is on the 1st node
+
+    @abstractmethod
+    def left(self):
+        """
+        Move cursor to node left.
+        Pre-conditions:
+            - storage is not empty.
+            - cursor is not on the 1st node;
+        Post-condition: cursor is on the node to the left.
+        """
+
+    @abstractmethod
+    def get_left_status(self) -> int:
         return 0
 

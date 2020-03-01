@@ -1,7 +1,12 @@
-from .abstract_data_types.abstract_linked_list import AbstractLinkedList
+from .abstract_data_types.abstract_linked_list import (
+    _BaseAbstractLinkedList,
+    AbstractLinkedList,
+    AbstractTwoWayList
+)
 
 
-class __ParentList(AbstractLinkedList):
+class __ParentList(_BaseAbstractLinkedList):
+
     def __init__(self):
         """Implementation of an AbstractLinkedList."""
         super().__init__()
@@ -211,28 +216,17 @@ class __ParentList(AbstractLinkedList):
         return self.__remove_all_status
 
 
-class LinkedList(__ParentList):
+class LinkedList(__ParentList, AbstractLinkedList):
     ...
 
 
-class TwoWayList(__ParentList):
-    LEFT_NIL = 0        # left() not called yet
-    LEFT_OK = 1         # last left() call completed successfully
-    LEFT_EMPTY_ERR = 2  # storage is empty
-    LEFT_HEAD_ERR = 3   # cursor is on the 1st node
+class TwoWayList(__ParentList, AbstractTwoWayList):
 
     def __init__(self):
         super().__init__()
         self.__left_status = self.LEFT_NIL
 
     def left(self):
-        """
-        Move cursor to node left.
-        Pre-conditions:
-            - storage is not empty.
-            - cursor is not on the 1st node;
-        Post-condition: cursor is on the node to the left.
-        """
         if not self.is_value():
             self.__left_status = self.LEFT_EMPTY_ERR
         elif self.is_head():
