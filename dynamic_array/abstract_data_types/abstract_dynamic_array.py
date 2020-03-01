@@ -251,3 +251,7 @@ class _BaseAbstractDynamicArray(metaclass=ABCMeta):
         return 0
 
 
+class AbstractDynamicArray(_BaseAbstractDynamicArray):
+    ...
+
+
