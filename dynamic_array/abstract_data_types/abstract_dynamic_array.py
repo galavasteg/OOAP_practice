@@ -255,3 +255,16 @@ class AbstractDynamicArray(_BaseAbstractDynamicArray):
     ...
 
 
+class AbstractSlicableDynamicArray(_BaseAbstractDynamicArray):
+    """TODO: insert in tail if index is greater then size"""
+    GETITEM_SLICE_OK = 2           # last __getitem__() call returned correct items
+    GETITEM_TYPE_ERR = 3           # __getitem__() got wrong index(ices) type
+    GETITEM_OUT_OF_BOUNDS_ERR = 4  # __getitem__() got wrong index(ices) value
+    GETITEM_SLICE_TYPE_ERR = 5     # __getitem__() got wrong slice indices
+
+    # requests:
+    @abstractmethod
+    def __getitem__(self, i: int or slice) -> object:
+        """TODO: doc"""
+        return None
+
