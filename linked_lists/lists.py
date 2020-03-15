@@ -8,7 +8,7 @@ from .abstract_data_types.abstract_linked_list import (
 class __ParentList(_BaseAbstractLinkedList):
 
     def __init__(self):
-        """Implementation of an AbstractLinkedList."""
+        """Implementation of a _BaseAbstractLinkedList."""
         super().__init__()
         self._cursor = None
         self.__storage = []
@@ -217,12 +217,16 @@ class __ParentList(_BaseAbstractLinkedList):
 
 
 class LinkedList(__ParentList, AbstractLinkedList):
-    ...
+
+    def __init__(self):
+        """Implementation of an AbstractLinkedList."""
+        super().__init__()
 
 
 class TwoWayList(__ParentList, AbstractTwoWayList):
 
     def __init__(self):
+        """Implementation of an AbstractTwoWayList."""
         super().__init__()
         self.__left_status = self.LEFT_NIL
 
