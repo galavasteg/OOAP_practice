@@ -56,7 +56,7 @@ CONSTRUCTOR
 
 COMMANDS
 
-    insert(self, i: int item: object) - Insert **item** into **i**-th position.
+    insert(self, i: int, item: object) - Insert **item** into **i**-th position.
 
         Pre-condition:
             - **i** points to existing item or equal to array size.
@@ -98,9 +98,9 @@ ADDITIONAL REQUESTS
 
 STATUS REQUESTS
 
-    get_getitem_status(self) - status of last __getitem__() call (GETITEM_* constant)
-    get_insert_status(self) - status of last insert() call (INSERT_* constant)
-    get_delete_status(self) - status of last delete() call (DELETE_* constant)
+    get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant)
+    get_insert_status(self) -> status of last insert() call (INSERT_* constant)
+    get_delete_status(self) -> status of last delete() call (DELETE_* constant)
 
 """
 
@@ -192,7 +192,7 @@ class _BaseAbstractDynamicArray(metaclass=ABCMeta):
         Pre-condition:
             - **i** points to existing item.
         Post-condition:
-            - all subsequent items shifted forward
+            - **i**-th item deleted.
             - if the array is less than
               **DECREASE_CAPACITY_PERCENT_THRESHOLD** % full
               after deletion then this command decrease capacity
