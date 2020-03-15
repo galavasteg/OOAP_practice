@@ -42,7 +42,11 @@ COMMANDS
 REQUESTS
 
     __len__(self) -> number of items in the queue
+
     peek(self) -> the head-item of the queue
+
+        Pre-condition:
+            - the queue is not empty.
 
 STATUS REQUESTS
     get_peek_status(self) -> status of last peek() call (PEEK_* constant)
