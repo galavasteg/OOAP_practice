@@ -1,4 +1,53 @@
 """
+AbstractQueue is an abstract data type for
+implementing a queue.
+
+CONSTANTS
+
+    PEEK_NIL = 0        # peek() not called yet
+    PEEK_OK = 1         # last peek() call returned correct item
+    PEEK_EMPTY_ERR = 2  # queue is empty
+
+    DEQUEUE_NIL = 0        # dequeue() not called yet
+    DEQUEUE_OK = 1         # last dequeue() call completed successfully
+    DEQUEUE_EMPTY_ERR = 2  # queue is empty
+
+CONSTRUCTOR
+
+    __new__(cls) -> new queue instance
+        Post-condition:
+            - created a new instance.
+
+    __init__(self, max_size: int):
+        Initializing the instance after it's been created.
+
+        Post-condition:
+            - the queue command statuses set to initial (*_NIL constants)
+            - the queue size is 0
+
+COMMANDS
+
+    enqueue(self, item: object) - Insert **item** into tail.
+
+        Post-condition:
+            - item added to queue tail.
+
+    dequeue(self) - Delete the head-item from the queue.
+
+        Pre-condition:
+            - the queue is not empty.
+        Post-condition:
+            - the head-item removed from the queue.
+
+REQUESTS
+
+    __len__(self) -> number of items in the queue
+    peek(self) -> the head-item of the queue
+
+STATUS REQUESTS
+    get_peek_status(self) -> status of last peek() call (PEEK_* constant)
+    get_dequeue_status(self) -> status of last dequeue() call (DEQUEUE_* constant)
+
 """
 
 from abc import ABCMeta, abstractmethod
