@@ -82,6 +82,43 @@ class AbstractQueue(metaclass=ABCMeta):
 
         """
 
+    # commands:
+    @abstractmethod
+    def enqueue(self, item):
+        """Insert **item** into tail.
+
+        Post-condition:
+            - item added to queue tail.
+
+        """
+
+    @abstractmethod
+    def dequeue(self):
+        """Delete the head-item from the queue.
+
+        Pre-condition:
+            - the queue is not empty.
+        Post-condition:
+            - the head-item removed from the queue.
+
+        """
+
+    # requests:
+    @abstractmethod
+    def __len__(self) -> int:
+        """Return the number of items in the queue."""
+        return 0
+
+    @abstractmethod
+    def peek(self) -> object:
+        """Return the head-item of the queue.
+
+        Pre-condition:
+            - the queue is not empty.
+
+        """
+        return None
+
     # method statuses requests:
     @abstractmethod
     def get_peek_status(self) -> int:
