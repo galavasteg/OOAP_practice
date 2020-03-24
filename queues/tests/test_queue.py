@@ -49,8 +49,8 @@ class QueueTestsBase(unittest.TestCase):
 
         self.assertTupleEqual(actual_items, expected_items)
         self.assertEqual(len(queue), len(expected_items))
-        self.assertEqual(queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_OK)
+        self.assertEqual(queue.get_remove_status(),
+                         self.QUEUE_CLS.REMOVE_OK)
 
     def check_items_after_failed_dequeue(self, queue: QUEUE_CLS):
         array = queue._Queue__queue
@@ -59,8 +59,8 @@ class QueueTestsBase(unittest.TestCase):
 
         self.assertTupleEqual(actual_items, expected_items)
         self.assertEqual(len(queue), len(expected_items))
-        self.assertEqual(queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_EMPTY_ERR)
+        self.assertEqual(queue.get_remove_status(),
+                         self.QUEUE_CLS.REMOVE_EMPTY_ERR)
 
 
 class Queue1EmptyTests(QueueTestsBase):
@@ -72,8 +72,8 @@ class Queue1EmptyTests(QueueTestsBase):
 
         actual_params = (len(_), )
         actual_statuses = (
-                _.get_dequeue_status(),
-                _.get_peek_status(),
+                _.get_remove_status(),
+                _.get_get_status(),
             )
         actual_state = actual_params + actual_statuses
 
@@ -88,11 +88,11 @@ class Queue1EmptyTests(QueueTestsBase):
 
         self.check_items_after_enqueue(self.queue, 'item')
 
-    def test_03_empty_peek_bad_empty(self):
-        _ = self.queue.peek()
+    def test_03_empty_get_front_bad_empty(self):
+        _ = self.queue.get_front()
 
-        self.assertEqual(self.queue.get_peek_status(),
-                         self.QUEUE_CLS.PEEK_EMPTY_ERR)
+        self.assertEqual(self.queue.get_get_status(),
+                         self.QUEUE_CLS.GET_EMPTY_ERR)
 
     def test_04_empty_dequeue_bad_empty(self):
         self.queue.dequeue()
@@ -104,13 +104,13 @@ class Queue2FilledTests(QueueTestsBase):
 
     INIT_ITEMS = range(8)
 
-    def test_01_filled_peek(self):
+    def test_01_filled_get_front(self):
         array = self.queue._Queue__queue
 
-        item = self.queue.peek()
+        item = self.queue.get_front()
 
-        self.assertEqual(self.queue.get_peek_status(),
-                         self.QUEUE_CLS.PEEK_OK)
+        self.assertEqual(self.queue.get_get_status(),
+                         self.QUEUE_CLS.GET_OK)
         self.assertEqual(array[0], item)
 
     def test_02_filled_dequeue(self):
@@ -134,8 +134,8 @@ class Queue3DequeAllTests(QueueTestsBase):
 
         expected_size = 0
         self.assertEqual(len(self.queue), expected_size)
-        self.assertEqual(self.queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_OK)
+        self.assertEqual(self.queue.get_remove_status(),
+                         self.QUEUE_CLS.REMOVE_OK)
 
 
 if __name__ == '__main__':
