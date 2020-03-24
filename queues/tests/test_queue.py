@@ -1,5 +1,4 @@
 from collections.abc import Iterable
-from random import choice
 import unittest
 
 from queues import Queue
@@ -30,7 +29,7 @@ class QueueTestsBase(unittest.TestCase):
 
     def check_items_after_enqueue(self, queue: QUEUE_CLS,
                                   ins_item: object):
-        array = queue._Queue__queue
+        array = queue._queue
         actual_items = self.get_array_items(array)
 
         ins_index = len(queue)
@@ -41,7 +40,7 @@ class QueueTestsBase(unittest.TestCase):
         self.assertEqual(len(queue), len(expected_items))
 
     def check_items_after_ok_dequeue(self, queue: QUEUE_CLS):
-        array = queue._Queue__queue
+        array = queue._queue
         actual_items = self.get_array_items(array)
 
         del_index = 0
@@ -53,7 +52,7 @@ class QueueTestsBase(unittest.TestCase):
                          self.QUEUE_CLS.REMOVE_OK)
 
     def check_items_after_failed_dequeue(self, queue: QUEUE_CLS):
-        array = queue._Queue__queue
+        array = queue._queue
         actual_items = self.get_array_items(array)
         expected_items = tuple(self.INIT_ITEMS)
 
@@ -105,7 +104,7 @@ class Queue2FilledTests(QueueTestsBase):
     INIT_ITEMS = range(8)
 
     def test_01_filled_get_front(self):
-        array = self.queue._Queue__queue
+        array = self.queue._queue
 
         item = self.queue.get_front()
 
@@ -128,7 +127,7 @@ class Queue3DequeAllTests(QueueTestsBase):
             self.queue.dequeue()
 
         expected_items = ()
-        array = self.queue._Queue__queue
+        array = self.queue._queue
         actual_items = self.get_array_items(array)
         self.assertTupleEqual(actual_items, expected_items)
 
