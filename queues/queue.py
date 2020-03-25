@@ -100,4 +100,3 @@ class Deque(__BaseQueue, AbstractDeque):
             self._get_status = self.GET_OK
 
         return item
-
