@@ -1,8 +1,5 @@
-from collections.abc import Iterable
 import unittest
-
-from queues import Deque
-from dynamic_array import DynamicArray
+from collections.abc import Iterable
 
 
 class StructureTestsBase(unittest.TestCase):
@@ -29,4 +26,3 @@ class StructureTestsBase(unittest.TestCase):
     def get_array_items(array: _ARRAY_CLS):
         items = tuple(map(lambda i: array[i], range(len(array))))
         return items
-
