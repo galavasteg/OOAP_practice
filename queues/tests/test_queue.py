@@ -1,36 +1,19 @@
-from collections.abc import Iterable
-from random import choice
 import unittest
 
+from _base import StructureTestsBase
 from queues import Queue
 from dynamic_array import DynamicArray
 
 
-class QueueTestsBase(unittest.TestCase):
+class QueueTestsBase(StructureTestsBase):
 
-    QUEUE_CLS = Queue
-    ARRAY_CLS = DynamicArray
-    INIT_ITEMS = range(0)
+    _TEST_CLS = Queue
+    _ARRAY_CLS = DynamicArray
+    _FILL_METHOD = 'enqueue'
 
-    def setUp(self):
-        self.queue = self.QUEUE_CLS()
-        self.queue = self.get_filled_queue(self.INIT_ITEMS)
-
-    @classmethod
-    def get_filled_queue(cls, items: Iterable) -> QUEUE_CLS:
-        queue = cls.QUEUE_CLS()
-        for v in items:
-            queue.enqueue(v)
-        return queue
-
-    @staticmethod
-    def get_array_items(array: ARRAY_CLS):
-        items = tuple(map(lambda i: array[i], range(len(array))))
-        return items
-
-    def check_items_after_enqueue(self, queue: QUEUE_CLS,
+    def check_items_after_enqueue(self, queue: _TEST_CLS,
                                   ins_item: object):
-        array = queue._Queue__queue
+        array = queue._queue
         actual_items = self.get_array_items(array)
 
         ins_index = len(queue)
@@ -40,8 +23,8 @@ class QueueTestsBase(unittest.TestCase):
         self.assertTupleEqual(actual_items, expected_items)
         self.assertEqual(len(queue), len(expected_items))
 
-    def check_items_after_ok_dequeue(self, queue: QUEUE_CLS):
-        array = queue._Queue__queue
+    def check_items_after_ok_dequeue(self, queue: _TEST_CLS):
+        array = queue._queue
         actual_items = self.get_array_items(array)
 
         del_index = 0
@@ -49,18 +32,18 @@ class QueueTestsBase(unittest.TestCase):
 
         self.assertTupleEqual(actual_items, expected_items)
         self.assertEqual(len(queue), len(expected_items))
-        self.assertEqual(queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_OK)
+        self.assertEqual(queue.get_remove_status(),
+                         self._TEST_CLS.REMOVE_OK)
 
-    def check_items_after_failed_dequeue(self, queue: QUEUE_CLS):
-        array = queue._Queue__queue
+    def check_items_after_failed_dequeue(self, queue: _TEST_CLS):
+        array = queue._queue
         actual_items = self.get_array_items(array)
         expected_items = tuple(self.INIT_ITEMS)
 
         self.assertTupleEqual(actual_items, expected_items)
         self.assertEqual(len(queue), len(expected_items))
-        self.assertEqual(queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_EMPTY_ERR)
+        self.assertEqual(queue.get_remove_status(),
+                         self._TEST_CLS.REMOVE_EMPTY_ERR)
 
 
 class Queue1EmptyTests(QueueTestsBase):
@@ -68,12 +51,12 @@ class Queue1EmptyTests(QueueTestsBase):
     INIT_ITEMS = range(0)
 
     def test_01_constructor(self):
-        _ = self.queue
+        _ = self.struct_inst
 
         actual_params = (len(_), )
         actual_statuses = (
-                _.get_dequeue_status(),
-                _.get_peek_status(),
+                _.get_remove_status(),
+                _.get_get_status(),
             )
         actual_state = actual_params + actual_statuses
 
@@ -84,39 +67,39 @@ class Queue1EmptyTests(QueueTestsBase):
         self.assertTupleEqual(actual_state, expected_state)
 
     def test_02_empty_enqueue(self):
-        self.queue.enqueue('item')
+        self.struct_inst.enqueue('item')
 
-        self.check_items_after_enqueue(self.queue, 'item')
+        self.check_items_after_enqueue(self.struct_inst, 'item')
 
-    def test_03_empty_peek_bad_empty(self):
-        _ = self.queue.peek()
+    def test_03_empty_get_front_bad_empty(self):
+        _ = self.struct_inst.get_front()
 
-        self.assertEqual(self.queue.get_peek_status(),
-                         self.QUEUE_CLS.PEEK_EMPTY_ERR)
+        self.assertEqual(self.struct_inst.get_get_status(),
+                         self._TEST_CLS.GET_EMPTY_ERR)
 
     def test_04_empty_dequeue_bad_empty(self):
-        self.queue.dequeue()
+        self.struct_inst.dequeue()
 
-        self.check_items_after_failed_dequeue(self.queue)
+        self.check_items_after_failed_dequeue(self.struct_inst)
 
 
 class Queue2FilledTests(QueueTestsBase):
 
     INIT_ITEMS = range(8)
 
-    def test_01_filled_peek(self):
-        array = self.queue._Queue__queue
+    def test_01_filled_get_front(self):
+        array = self.struct_inst._queue
 
-        item = self.queue.peek()
+        item = self.struct_inst.get_front()
 
-        self.assertEqual(self.queue.get_peek_status(),
-                         self.QUEUE_CLS.PEEK_OK)
+        self.assertEqual(self.struct_inst.get_get_status(),
+                         self._TEST_CLS.GET_OK)
         self.assertEqual(array[0], item)
 
     def test_02_filled_dequeue(self):
-        self.queue.dequeue()
+        self.struct_inst.dequeue()
 
-        self.check_items_after_ok_dequeue(self.queue)
+        self.check_items_after_ok_dequeue(self.struct_inst)
 
 
 class Queue3DequeAllTests(QueueTestsBase):
@@ -125,19 +108,18 @@ class Queue3DequeAllTests(QueueTestsBase):
 
     def test_01_dequeue_all(self):
         for _ in range(len(self.INIT_ITEMS)):
-            self.queue.dequeue()
+            self.struct_inst.dequeue()
 
         expected_items = ()
-        array = self.queue._Queue__queue
+        array = self.struct_inst._queue
         actual_items = self.get_array_items(array)
         self.assertTupleEqual(actual_items, expected_items)
 
         expected_size = 0
-        self.assertEqual(len(self.queue), expected_size)
-        self.assertEqual(self.queue.get_dequeue_status(),
-                         self.QUEUE_CLS.DEQUEUE_OK)
+        self.assertEqual(len(self.struct_inst), expected_size)
+        self.assertEqual(self.struct_inst.get_remove_status(),
+                         self._TEST_CLS.REMOVE_OK)
 
 
 if __name__ == '__main__':
     unittest.main()
-
