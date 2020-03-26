@@ -1,2 +1,1 @@
-from .queue import Queue, Deque
-
+from .queues import Queue, Deque
