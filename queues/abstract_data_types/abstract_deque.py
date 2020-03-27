@@ -128,7 +128,7 @@ class AbstractDeque(_BaseAbstractQueue):
     # requests:
     @abstractmethod
     def get_tail(self) -> object:
-        """Return the the tail-item of the deque.
+        """Return the tail-item of the deque.
 
         Pre-condition:
             - the deque is not empty.

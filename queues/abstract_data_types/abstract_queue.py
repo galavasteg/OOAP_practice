@@ -89,6 +89,27 @@ class _BaseAbstractQueue(metaclass=ABCMeta):
 
         """
 
+    # commands:
+    @abstractmethod
+    def enqueue(self, item):
+        """Insert **item** into tail.
+
+        Post-condition:
+            - item added to queue tail.
+
+        """
+
+    @abstractmethod
+    def dequeue(self):
+        """Delete the head-item from the queue.
+
+        Pre-condition:
+            - the queue is not empty.
+        Post-condition:
+            - the head-item removed from the queue.
+
+        """
+
     # requests:
     @abstractmethod
     def __len__(self) -> int:
@@ -120,24 +141,4 @@ class _BaseAbstractQueue(metaclass=ABCMeta):
 
 
 class AbstractQueue(_BaseAbstractQueue):
-
-    # commands:
-    @abstractmethod
-    def enqueue(self, item):
-        """Insert **item** into tail.
-
-        Post-condition:
-            - item added to queue tail.
-
-        """
-
-    @abstractmethod
-    def dequeue(self):
-        """Delete the head-item from the queue.
-
-        Pre-condition:
-            - the queue is not empty.
-        Post-condition:
-            - the head-item removed from the queue.
-
-        """
+    ...
