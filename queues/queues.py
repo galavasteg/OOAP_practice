@@ -66,8 +66,8 @@ CONSTANTS
     GET_OK         # last get_front/get_tail() call returned correct item
     GET_EMPTY_ERR  # deque is empty
 
-    REMOVE_NIL        # remove_*() not called yet
-    REMOVE_OK         # last remove_*() call completed successfully
+    REMOVE_NIL        # dequeue/remove_tail() not called yet
+    REMOVE_OK         # last dequeue/remove_tail() call completed successfully
     REMOVE_EMPTY_ERR  # deque is empty
 
 CONSTRUCTOR
@@ -125,7 +125,7 @@ REQUESTS
 
 STATUS REQUESTS
     get_get_status(self) -> status of last get_front/get_tail() call (GET_* constant)
-    get_remove_status(self) -> status of last remove_*() call (REMOVE_* constant)
+    get_remove_status(self) -> status of last dequeue/remove_tail() call (REMOVE_* constant)
 
 """
 
@@ -138,12 +138,20 @@ class __BaseQueue:
     GET_OK = 1         # last get_front/get_tail() call returned correct item
     GET_EMPTY_ERR = 2  # queue/deque is empty
 
-    REMOVE_NIL = 0        # dequeue/remove_*() not called yet
-    REMOVE_OK = 1         # last dequeue/remove_*() call completed successfully
+    REMOVE_NIL = 0        # dequeue/remove_tail() not called yet
+    REMOVE_OK = 1         # last dequeue/remove_tail() call completed successfully
     REMOVE_EMPTY_ERR = 2  # queue/deque is empty
 
     def __init__(self):
-        """Implementation of an AbstractQueue."""
+        """
+        Initializing the instance after it's been created
+
+        Post-condition:
+            - the queue/deque command statuses set to
+              initial (*_NIL constants).
+            - the queue/deque size is 0.
+
+        """
         super().__init__()
         self._queue = DynamicArray()
 
@@ -162,10 +170,26 @@ class __BaseQueue:
 
     # commands:
     def enqueue(self, item):
+        """
+        Insert **item** into tail.
+
+        Post-condition:
+            - item added to queue/deque tail.
+
+        """
         new_tail_index = len(self)
         self._queue.insert(new_tail_index, item)
 
     def dequeue(self):
+        """
+        Delete the head-item from the queue/deque.
+
+        Pre-condition:
+            - the queue/deque is not empty.
+        Post-condition:
+            - the head-item removed from the queue/deque.
+
+        """
         head_i = 0
         self._remove_item_by_index(head_i)
 
@@ -184,18 +208,30 @@ class __BaseQueue:
 
     # requests:
     def __len__(self):
+        """Return the number of items in the queue/deque."""
         return len(self._queue)
 
     def get_front(self) -> object:
+        """
+        Return the head-item of the queue/deque.
+
+        Pre-condition:
+            - the queue/deque is not empty.
+
+        """
         head_i = 0
         item = self._get_item_by_index(head_i)
         return item
 
     # method statuses requests:
     def get_get_status(self) -> int:
+        """Return status of last get_front/get_tail() call:
+        one of the GET_* constants."""
         return self._get_status
 
     def get_remove_status(self) -> int:
+        """Return status of last dequeue/remove_tail() call:
+        one of the REMOVE_* constants."""
         return self._remove_status
 
 
@@ -207,15 +243,38 @@ class Deque(__BaseQueue):
 
     # commands:
     def add_front(self, item):
+        """
+        Insert **item** into head.
+
+        Post-condition:
+            - item added to deque head.
+
+        """
         head_i = 0
         self._queue.insert(head_i, item)
 
     def remove_tail(self):
+        """
+        Delete the tail-item from the deque.
+
+        Pre-condition:
+            - the deque is not empty.
+        Post-condition:
+            - the tail-item removed from the deque.
+
+        """
         tail_i = len(self) - 1
         self._remove_item_by_index(tail_i)
 
     # requests:
     def get_tail(self) -> object:
+        """
+        Return the tail-item of the deque.
+
+        Pre-condition:
+            - the deque is not empty.
+
+        """
         tail_i = len(self) - 1
         item = self._get_item_by_index(tail_i)
         return item
