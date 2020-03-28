@@ -1,3 +1,134 @@
+"""
+-------------------- 1. Queue ATD --------------------
+
+This is an abstract data type specification for
+a Queue implementation.
+
+CONSTANTS
+
+    GET_NIL        # get_front() not called yet
+    GET_OK         # last get_front() call returned correct item
+    GET_EMPTY_ERR  # queue is empty
+
+    REMOVE_NIL        # dequeue() not called yet
+    REMOVE_OK         # last dequeue() call completed successfully
+    REMOVE_EMPTY_ERR  # queue is empty
+
+CONSTRUCTOR
+
+    __new__(cls) -> new queue instance
+        Post-condition:
+            - created a new instance.
+
+    __init__(self, max_size: int):
+        Initializing the instance after it's been created.
+
+        Post-condition:
+            - the queue method statuses set to initial (*_NIL constants)
+            - the queue size is 0
+
+COMMANDS
+
+    enqueue(self, item: object) - Insert **item** into tail.
+
+        Post-condition:
+            - item added to queue tail.
+
+    dequeue(self) - Delete the head-item from the queue.
+
+        Pre-condition:
+            - the queue is not empty.
+        Post-condition:
+            - the head-item removed from the queue.
+
+REQUESTS
+
+    __len__(self) -> number of items in the queue
+
+    get_front(self) -> the head-item of the queue
+
+        Pre-condition:
+            - the queue is not empty.
+
+STATUS REQUESTS
+    get_get_status(self) -> status of last get_front() call (GET_* constant)
+    get_dequeue_status(self) -> status of last dequeue() call (REMOVE_* constant)
+
+
+-------------------- 2. Deque ATD --------------------
+
+This is an abstract data type specification for
+a Deque implementation.
+
+CONSTANTS
+
+    GET_NIL        # get_front/get_tail() not called yet
+    GET_OK         # last get_front/get_tail() call returned correct item
+    GET_EMPTY_ERR  # deque is empty
+
+    REMOVE_NIL        # remove_*() not called yet
+    REMOVE_OK         # last remove_*() call completed successfully
+    REMOVE_EMPTY_ERR  # deque is empty
+
+CONSTRUCTOR
+
+    __new__(cls) -> new deque instance
+        Post-condition:
+            - created a new instance.
+
+    __init__(self, max_size: int):
+        Initializing the instance after it's been created.
+
+        Post-condition:
+            - the deque method statuses set to initial (*_NIL constants)
+            - the deque size is 0
+
+COMMANDS
+
+    enqueue(self, item: object) - Insert **item** into tail.
+
+        Post-condition:
+            - item added to deque tail.
+
+    dequeue(self) - Delete the head-item from the deque.
+
+        Pre-condition:
+            - the deque is not empty.
+        Post-condition:
+            - the head-item removed from the deque.
+
+    add_front(self, item: object) - Insert **item** into head.
+
+        Post-condition:
+            - item added to deque head.
+
+    remove_tail(self) - Delete the tail-item from the deque.
+
+        Pre-condition:
+            - the deque is not empty.
+        Post-condition:
+            - the tail-item removed from the deque.
+
+REQUESTS
+
+    __len__(self) -> number of items in the deque
+
+    get_front(self) -> the head-item of the deque
+
+        Pre-condition:
+            - the deque is not empty.
+
+    get_tail(self) -> the tail-item of the deque
+
+        Pre-condition:
+            - the deque is not empty.
+
+STATUS REQUESTS
+    get_get_status(self) -> status of last get_front/get_tail() call (GET_* constant)
+    get_remove_status(self) -> status of last remove_*() call (REMOVE_* constant)
+
+"""
+
 from dynamic_array import DynamicArray
 
 
@@ -78,12 +209,6 @@ class Deque(__BaseQueue):
     def add_front(self, item):
         head_i = 0
         self._queue.insert(head_i, item)
-
-    def add_tail(self, item):
-        self.enqueue(item)
-
-    def remove_front(self):
-        self.dequeue()
 
     def remove_tail(self):
         tail_i = len(self) - 1

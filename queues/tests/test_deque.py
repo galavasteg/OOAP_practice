@@ -10,7 +10,7 @@ class DequeTestsBase(StructureTestsBase):
 
     _TEST_CLS = Deque
     _ARRAY_CLS = DynamicArray
-    _FILL_METHOD = 'add_tail'
+    _FILL_METHOD = 'enqueue'
 
     def check_items_after_add_or_remove(self, expected_items: tuple):
         array = self.struct_inst._queue
@@ -47,13 +47,13 @@ class Deque1EmptyTests(DequeTestsBase):
         self.check_items_after_add_or_remove(expected_items)
 
     def test_03_empty_add_tail(self):
-        self.struct_inst.add_tail('item')
+        self.struct_inst.enqueue('item')
 
         expected_items = ('item',)
         self.check_items_after_add_or_remove(expected_items)
 
     def test_04_empty_remove_front_neg_empty(self):
-        self.struct_inst.remove_front()
+        self.struct_inst.dequeue()
 
         expected_items = ()
         self.check_items_after_add_or_remove(expected_items)
@@ -92,13 +92,13 @@ class Deque2FilledTests(DequeTestsBase):
         self.check_items_after_add_or_remove(expected_items)
 
     def test_02_filled_add_tail(self):
-        self.struct_inst.add_tail('item')
+        self.struct_inst.enqueue('item')
 
         expected_items = tuple(self.INIT_ITEMS) + ('item',)
         self.check_items_after_add_or_remove(expected_items)
 
     def test_03_filled_remove_front(self):
-        self.struct_inst.remove_front()
+        self.struct_inst.dequeue()
 
         expected_items = tuple(self.INIT_ITEMS[1:])
         self.check_items_after_add_or_remove(expected_items)
@@ -135,7 +135,7 @@ class Deque3DequeAllTests(DequeTestsBase):
     def test_01_remove_all_randomly(self):
         deque = self.struct_inst
         methods = (
-                deque.remove_front.__name__,
+                deque.dequeue.__name__,
                 deque.remove_tail.__name__,
             )
 
