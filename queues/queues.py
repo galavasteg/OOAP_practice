@@ -29,7 +29,7 @@ CONSTRUCTOR
 
 COMMANDS
 
-    enqueue(self, item: object) - Insert **item** into tail.
+    add_tail(self, item: object) - Insert **item** into tail.
 
         Post-condition:
             - item added to queue tail.
@@ -66,8 +66,8 @@ CONSTANTS
     GET_OK         # last get_front/get_tail() call returned correct item
     GET_EMPTY_ERR  # deque is empty
 
-    REMOVE_NIL        # dequeue/remove_tail() not called yet
-    REMOVE_OK         # last dequeue/remove_tail() call completed successfully
+    REMOVE_NIL        # remove_*() not called yet
+    REMOVE_OK         # last remove_*() call completed successfully
     REMOVE_EMPTY_ERR  # deque is empty
 
 CONSTRUCTOR
@@ -85,7 +85,7 @@ CONSTRUCTOR
 
 COMMANDS
 
-    enqueue(self, item: object) - Insert **item** into tail.
+    add_tail(self, item: object) - Insert **item** into tail.
 
         Post-condition:
             - item added to deque tail.
@@ -125,7 +125,7 @@ REQUESTS
 
 STATUS REQUESTS
     get_get_status(self) -> status of last get_front/get_tail() call (GET_* constant)
-    get_remove_status(self) -> status of last dequeue/remove_tail() call (REMOVE_* constant)
+    get_remove_status(self) -> status of last remove_*() call (REMOVE_* constant)
 
 """
 
@@ -138,8 +138,8 @@ class __BaseQueue:
     GET_OK = 1         # last get_front/get_tail() call returned correct item
     GET_EMPTY_ERR = 2  # queue/deque is empty
 
-    REMOVE_NIL = 0        # dequeue/remove_tail() not called yet
-    REMOVE_OK = 1         # last dequeue/remove_tail() call completed successfully
+    REMOVE_NIL = 0        # remove_*() not called yet
+    REMOVE_OK = 1         # last remove_*() call completed successfully
     REMOVE_EMPTY_ERR = 2  # queue/deque is empty
 
     def __init__(self):
@@ -169,7 +169,7 @@ class __BaseQueue:
             self._remove_status = self.REMOVE_OK
 
     # commands:
-    def enqueue(self, item):
+    def add_tail(self, item):
         """
         Insert **item** into tail.
 
@@ -180,7 +180,7 @@ class __BaseQueue:
         new_tail_index = len(self)
         self._queue.insert(new_tail_index, item)
 
-    def dequeue(self):
+    def remove_front(self):
         """
         Delete the head-item from the queue/deque.
 
@@ -230,7 +230,7 @@ class __BaseQueue:
         return self._get_status
 
     def get_remove_status(self) -> int:
-        """Return status of last dequeue/remove_tail() call:
+        """Return status of last remove_*() call:
         one of the REMOVE_* constants."""
         return self._remove_status
 

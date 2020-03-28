@@ -9,7 +9,7 @@ class QueueTestsBase(StructureTestsBase):
 
     _TEST_CLS = Queue
     _ARRAY_CLS = DynamicArray
-    _FILL_METHOD = 'enqueue'
+    _FILL_METHOD = 'add_tail'
 
     def check_items_after_enqueue(self, queue: _TEST_CLS,
                                   ins_item: object):
@@ -67,7 +67,7 @@ class Queue1EmptyTests(QueueTestsBase):
         self.assertTupleEqual(actual_state, expected_state)
 
     def test_02_empty_enqueue(self):
-        self.struct_inst.enqueue('item')
+        self.struct_inst.add_tail('item')
 
         self.check_items_after_enqueue(self.struct_inst, 'item')
 
@@ -78,7 +78,7 @@ class Queue1EmptyTests(QueueTestsBase):
                          self._TEST_CLS.GET_EMPTY_ERR)
 
     def test_04_empty_dequeue_bad_empty(self):
-        self.struct_inst.dequeue()
+        self.struct_inst.remove_front()
 
         self.check_items_after_failed_dequeue(self.struct_inst)
 
@@ -97,7 +97,7 @@ class Queue2FilledTests(QueueTestsBase):
         self.assertEqual(array[0], item)
 
     def test_02_filled_dequeue(self):
-        self.struct_inst.dequeue()
+        self.struct_inst.remove_front()
 
         self.check_items_after_ok_dequeue(self.struct_inst)
 
@@ -108,7 +108,7 @@ class Queue3DequeAllTests(QueueTestsBase):
 
     def test_01_dequeue_all(self):
         for _ in range(len(self.INIT_ITEMS)):
-            self.struct_inst.dequeue()
+            self.struct_inst.remove_front()
 
         expected_items = ()
         array = self.struct_inst._queue
