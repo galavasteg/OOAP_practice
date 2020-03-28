@@ -1,12 +1,15 @@
-from .abstract_data_types import (
-        _BaseAbstractQueue,
-        AbstractQueue,
-        AbstractDeque,
-    )
 from dynamic_array import DynamicArray
 
 
-class __BaseQueue(_BaseAbstractQueue):
+class __BaseQueue:
+
+    GET_NIL = 0        # get_front/get_tail() not called yet
+    GET_OK = 1         # last get_front/get_tail() call returned correct item
+    GET_EMPTY_ERR = 2  # queue/deque is empty
+
+    REMOVE_NIL = 0        # dequeue/remove_*() not called yet
+    REMOVE_OK = 1         # last dequeue/remove_*() call completed successfully
+    REMOVE_EMPTY_ERR = 2  # queue/deque is empty
 
     def __init__(self):
         """Implementation of an AbstractQueue."""
@@ -65,11 +68,11 @@ class __BaseQueue(_BaseAbstractQueue):
         return self._remove_status
 
 
-class Queue(__BaseQueue, AbstractQueue):
+class Queue(__BaseQueue):
     ...
 
 
-class Deque(__BaseQueue, AbstractDeque):
+class Deque(__BaseQueue):
 
     # commands:
     def add_front(self, item):
