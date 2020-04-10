@@ -152,7 +152,6 @@ class __BaseQueue:
             - the queue/deque size is 0.
 
         """
-        super().__init__()
         self._queue = DynamicArray()
 
         self._get_status = self.GET_NIL
