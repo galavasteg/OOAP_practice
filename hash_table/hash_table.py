@@ -62,7 +62,16 @@ class HashTable:
             within = tmp_slot < self._capacity
             is_busy = within and self._values[tmp_slot] is not None
 
+    def _to_free_slot_stepper(self, start_slot: int):
+        for slot in chain((start_slot,),
+                          self._next_busy_slot_stepper(start_slot)):
+            yield slot
 
+        slot += self.STEP
+        is_free = (slot < self._capacity and
+                   self._values[slot] is None)
+        if is_free:
+            yield slot
 
     def _is_collision(self, of_slot: int, slot: int) -> bool:
         slot_value = self._values[slot]
@@ -114,7 +123,7 @@ class HashTable:
             self._put_status = self.PUT_COLLISION_ERR
 
             hash_slot = self._hash_func(value)
-            for slot in self._slots_stepper(hash_slot):
+            for slot in self._to_free_slot_stepper(hash_slot):
 
                 if self._values[slot] == value:
                     self._put_status = self.PUT_EXISTS_ERR
@@ -124,6 +133,7 @@ class HashTable:
                 if is_free:
                     self._values[slot] = value
                     self._put_status = self.PUT_OK
+                    break
 
     def remove(self, value: str):
         """
