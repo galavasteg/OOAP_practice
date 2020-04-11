@@ -175,16 +175,13 @@ class HashTable:
         return len(tuple(filter(None.__ne__, self._values)))
 
     def is_value(self, value: str) -> bool:
-        is_value = False
-
         hash_slot = self._hash_func(value)
         for slot in self._next_busy_slot_stepper(hash_slot):
 
-            is_value = self._values[slot] == value
-            if is_value:
-                break
+            if self._values[slot] == value:
+                return True
 
-        return is_value
+        return False
 
     def get_capacity(self):
         """Return hashtable capacity."""
