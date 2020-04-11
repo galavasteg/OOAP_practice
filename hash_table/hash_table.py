@@ -17,16 +17,18 @@ STATUS REQUESTS
 
 class HashTable:
 
-    def __init__(self, size: int):
+    def __init__(self, capacity: int):
         """
 
         """
-        self._size = size
-        self._values = [None] * self._size
+        self._capacity = capacity
+        self._values = [None] * self._capacity
 
-    def _hash_fun(self, value: str) -> int:
+
+    # additional requests:
+    def _hash_func(self, value: str) -> int:
         bStr = value.encode()
-        slot = sum(bStr) % self._size
+        slot = sum(bStr) % self._capacity
         return slot
 
     def _slot_stepper(self, value):
@@ -59,7 +61,7 @@ class HashTable:
         """
 
     # requests:
-    def get_size(self):
-        return self._size
+    def get_capacity(self):
+        return self._capacity
 
     # method statuses requests:
