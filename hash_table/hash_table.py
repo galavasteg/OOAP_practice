@@ -75,7 +75,7 @@ class HashTable:
 
     def _is_collision(self, of_slot: int, slot: int) -> bool:
         slot_value = self._values[slot]
-        is_collision = self._hash_func(slot_value) == of_slot
+        is_collision = self._hash_func(slot_value) <= of_slot
         return is_collision
 
     def _get_last_collision_slot(self, of_slot: int, slots: tuple) -> tuple:
