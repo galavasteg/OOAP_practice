@@ -61,13 +61,13 @@ class HashTable:
 
             is_busy = self._values[tmp_slot] is not None
 
-    def _is_collition(self, of_slot: int, slot: int) -> bool:
+    def _is_collision(self, of_slot: int, slot: int) -> bool:
         slot_value = self._values[slot]
         is_collision = self._hash_func(slot_value) == of_slot
         return is_collision
 
     def _get_last_collision_slot(self, of_slot: int, slots: tuple) -> tuple:
-        is_collision = lambda s: self._is_collition(of_slot, slot=s)
+        is_collision = lambda s: self._is_collision(of_slot, slot=s)
         last_collision_slot = next(filter(is_collision, reversed(slots)),
                                    None)
         return last_collision_slot
@@ -108,6 +108,7 @@ class HashTable:
         if len(self) >= self._capacity:
             self._put_status = self.PUT_FULL_ERR
         else:
+            self._put_status = self.PUT_COLLISION_ERR
 
             hash_slot = self._hash_func(value)
             for slot in self._slots_stepper(hash_slot):
@@ -120,9 +121,6 @@ class HashTable:
                 if is_free:
                     self._values[slot] = value
                     self._put_status = self.PUT_OK
-
-                else:
-                    self._put_status = self.PUT_COLLISION_ERR
 
     def remove(self, value: str):
         """
