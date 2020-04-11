@@ -25,6 +25,10 @@ class HashTable:
     PUT_EXISTS_ERR = 3
     PUT_COLLISION_ERR = 4
 
+    REMOVE_NIL = 0
+    REMOVE_OK = 1
+    REMOVE_NOVALUE_ERR = 2
+
     STEP = 5
 
     def __init__(self, capacity: int):
@@ -35,6 +39,7 @@ class HashTable:
         self._values = [None] * self._capacity
 
         self._put_status = self.PUT_NIL
+        self._remove_status = self.REMOVE_NIL
 
     # additional requests:
     def _hash_func(self, value: str) -> int:
@@ -119,6 +124,36 @@ class HashTable:
                 else:
                     self._put_status = self.PUT_COLLISION_ERR
 
+    def remove(self, value: str):
+        """
+        Remove **value** from the hashtable.
+
+        Pre-condition:
+            - **value** exists in the hashtable
+        Post-condition:
+            - **value** removed from the hashtable
+
+        """
+        hash_slot = self._hash_func(value)
+        slots_stepper = self._slots_stepper(hash_slot)
+
+        self._remove_status = self.REMOVE_NOVALUE_ERR
+
+        for slot in slots_stepper:
+            if self._values[slot] == value:
+
+                next_busy_stepped_slots = tuple(slots_stepper)
+
+                collision_slots = self._get_collision_slots(
+                        of_slot=slot, slots=next_busy_stepped_slots)
+
+                # rebalance collisions
+                for s1, s2 in list(zip(collision_slots[:-1],
+                                       collision_slots[1:])):
+                    self._values[s1] = self._values[s2]
+                self._values[collision_slots[-1]] = None
+
+                self._remove_status = self.REMOVE_OK
 
     # requests:
     def __len__(self):
@@ -146,3 +181,7 @@ class HashTable:
         one of the PUT_* constants."""
         return self._put_status
 
+    def get_remove_status(self) -> int:
+        """Return status of last remove() call:
+        one of the REMOVE_* constants."""
+        return self._remove_status
