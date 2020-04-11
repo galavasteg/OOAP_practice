@@ -141,15 +141,17 @@ class HashTable:
             if self._values[slot] == value:
 
                 next_busy_stepped_slots = tuple(slots_stepper)
-
                 collision_slots = self._get_collision_slots(
                         of_slot=slot, slots=next_busy_stepped_slots)
 
-                # rebalance collisions
-                for s1, s2 in list(zip(collision_slots[:-1],
-                                       collision_slots[1:])):
-                    self._values[s1] = self._values[s2]
-                self._values[collision_slots[-1]] = None
+                if collision_slots:
+                    # collisions
+                    for s1, s2 in list(zip(collision_slots[:-1],
+                                           collision_slots[1:])):
+                        self._values[s1] = self._values[s2]
+                    self._values[collision_slots[-1]] = None
+                else:
+                    self._values[slot] = None
 
                 self._remove_status = self.REMOVE_OK
 
