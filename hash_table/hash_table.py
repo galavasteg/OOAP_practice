@@ -25,6 +25,8 @@ class HashTable:
     PUT_EXISTS_ERR = 3
     PUT_COLLISION_ERR = 4
 
+    STEP = 5
+
     def __init__(self, capacity: int):
         """
 
@@ -44,15 +46,15 @@ class HashTable:
 
         yield start_slot
 
-        is_collision = self._values[start_slot] is not None
-        tmp_slot, step = start_slot, 1
-        while is_collision and tmp_slot < self._capacity:
-            tmp_slot += step
+        tmp_slot = start_slot
+        is_busy = self._values[start_slot] is not None
+
+        while is_busy and tmp_slot < self._capacity:
+            tmp_slot += self.STEP
 
             yield tmp_slot
 
-            is_collision = self._values[tmp_slot] is not None
-            step = step ** 2
+            is_busy = self._values[tmp_slot] is not None
 
     # commands:
     def put(self, value: str):
