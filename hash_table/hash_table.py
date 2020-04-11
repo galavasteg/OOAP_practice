@@ -19,6 +19,12 @@ from typing import Generator
 
 class HashTable:
 
+    PUT_NIL = 0
+    PUT_OK = 1
+    PUT_FULL_ERR = 2
+    PUT_EXISTS_ERR = 3
+    PUT_COLLISION_ERR = 4
+
     def __init__(self, capacity: int):
         """
 
@@ -26,6 +32,7 @@ class HashTable:
         self._capacity = capacity
         self._values = [None] * self._capacity
 
+        self._put_status = self.PUT_NIL
 
     # additional requests:
     def _hash_func(self, value: str) -> int:
@@ -53,11 +60,32 @@ class HashTable:
         Store **value** into hashtable.
 
         Pre-condition:
-            - there is no collision
+            - the hashtable is not full
+            - **value** does not exist in hashtable
+            - no collision resolution error
         Post-condition:
-            - item added to queue/deque tail.
+            - **value** added to hashtable.
 
         """
+        if len(self) >= self._capacity:
+            self._put_status = self.PUT_FULL_ERR
+        else:
+
+            hash_slot = self._hash_func(value)
+            for slot in self._slots_stepper(hash_slot):
+
+                if self._values[slot] == value:
+                    self._put_status = self.PUT_EXISTS_ERR
+                    break
+
+                is_free = self._values[slot] is None
+                if is_free:
+                    self._values[slot] = value
+                    self._put_status = self.PUT_OK
+
+                else:
+                    self._put_status = self.PUT_COLLISION_ERR
+
 
     # requests:
     def __len__(self):
@@ -79,3 +107,8 @@ class HashTable:
         return self._capacity
 
     # method statuses requests:
+    def get_put_status(self) -> int:
+        """Return status of last put() call:
+        one of the PUT_* constants."""
+        return self._put_status
+
