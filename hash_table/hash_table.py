@@ -14,6 +14,8 @@ STATUS REQUESTS
 
 """
 
+from typing import Generator
+
 
 class HashTable:
 
@@ -31,21 +33,18 @@ class HashTable:
         slot = sum(bStr) % self._capacity
         return slot
 
-    def _slot_stepper(self, value):
-        step = 1
+    def _slots_stepper(self, start_slot: int) -> Generator[int]:
 
-        first_slot = tmp_slot = self._hash_fun(value)
-        yield first_slot
+        yield start_slot
 
-        if self._values[first_slot] is not None:
-            tmp_slot = (tmp_slot + step) % self._size
-            yield tmp_slot
-
-        while self._values[tmp_slot] is not None and first_slot != tmp_slot:
-            tmp_slot = (tmp_slot + step) % self._size
+        is_collision = self._values[start_slot] is not None
+        tmp_slot, step = start_slot, 1
+        while is_collision and tmp_slot < self._capacity:
+            tmp_slot += step
 
             yield tmp_slot
 
+            is_collision = self._values[tmp_slot] is not None
             step = step ** 2
 
     # commands:
