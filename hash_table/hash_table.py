@@ -60,6 +60,21 @@ class HashTable:
         """
 
     # requests:
+    def __len__(self):
+        return len(tuple(filter(None.__ne__, self._values)))
+
+    def is_value(self, value: str) -> bool:
+        is_value = False
+
+        hash_slot = self._hash_func(value)
+        for slot in self._slots_stepper(hash_slot):
+
+            is_value = self._values[slot] == value
+            if is_value:
+                break
+
+        return is_value
+
     def get_capacity(self):
         return self._capacity
 
