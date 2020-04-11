@@ -14,7 +14,7 @@ STATUS REQUESTS
 
 """
 
-from typing import Generator
+from itertools import chain
 
 
 class HashTable:
@@ -47,19 +47,22 @@ class HashTable:
         slot = sum(bStr) % self._capacity
         return slot
 
-    def _slots_stepper(self, start_slot: int) -> Generator[int]:
-
+    def _next_busy_slot_stepper(self, start_slot: int):
+        """"""
         yield start_slot
 
-        tmp_slot = start_slot
-        is_busy = self._values[start_slot] is not None
+        tmp_slot = start_slot + self.STEP
+        within = tmp_slot < self._capacity
+        is_busy = within and self._values[tmp_slot] is not None
 
-        while is_busy and tmp_slot < self._capacity:
-            tmp_slot += self.STEP
-
+        while is_busy:
             yield tmp_slot
 
-            is_busy = self._values[tmp_slot] is not None
+            tmp_slot += self.STEP
+            within = tmp_slot < self._capacity
+            is_busy = within and self._values[tmp_slot] is not None
+
+
 
     def _is_collision(self, of_slot: int, slot: int) -> bool:
         slot_value = self._values[slot]
@@ -133,25 +136,27 @@ class HashTable:
 
         """
         hash_slot = self._hash_func(value)
-        slots_stepper = self._slots_stepper(hash_slot)
+        slots_stepper = self._next_busy_slot_stepper(hash_slot)
 
         self._remove_status = self.REMOVE_NOVALUE_ERR
 
-        for slot in slots_stepper:
-            if self._values[slot] == value:
+        for to_remove_slot in slots_stepper:
+            if self._values[to_remove_slot] == value:
 
                 next_busy_stepped_slots = tuple(slots_stepper)
                 collision_slots = self._get_collision_slots(
-                        of_slot=slot, slots=next_busy_stepped_slots)
+                        of_slot=to_remove_slot,
+                        slots=next_busy_stepped_slots)
 
                 if collision_slots:
-                    # collisions
-                    for s1, s2 in list(zip(collision_slots[:-1],
-                                           collision_slots[1:])):
-                        self._values[s1] = self._values[s2]
+                    # offset collisions
+                    to_resolve_slots = (to_remove_slot,) + collision_slots
+                    for replace_s, by_s in zip(to_resolve_slots,
+                                               to_resolve_slots[1:]):
+                        self._values[replace_s] = self._values[by_s]
                     self._values[collision_slots[-1]] = None
                 else:
-                    self._values[slot] = None
+                    self._values[to_remove_slot] = None
 
                 self._remove_status = self.REMOVE_OK
 
@@ -163,7 +168,7 @@ class HashTable:
         is_value = False
 
         hash_slot = self._hash_func(value)
-        for slot in self._slots_stepper(hash_slot):
+        for slot in self._next_busy_slot_stepper(hash_slot):
 
             is_value = self._values[slot] == value
             if is_value:
