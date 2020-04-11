@@ -56,6 +56,37 @@ class HashTable:
 
             is_busy = self._values[tmp_slot] is not None
 
+    def _is_collition(self, of_slot: int, slot: int) -> bool:
+        slot_value = self._values[slot]
+        is_collision = self._hash_func(slot_value) == of_slot
+        return is_collision
+
+    def _get_last_collision_slot(self, of_slot: int, slots: tuple) -> tuple:
+        is_collision = lambda s: self._is_collition(of_slot, slot=s)
+        last_collision_slot = next(filter(is_collision, reversed(slots)),
+                                   None)
+        return last_collision_slot
+
+    def _get_collision_slots(self, of_slot: int, slots: tuple) -> tuple:
+        collision_slots = []
+
+        slots_ = slots
+        of_slot_ = of_slot
+
+        while slots_:
+            of_slot_ = last_collision_slot = self._get_last_collision_slot(
+                    of_slot_, slots_)
+
+            if last_collision_slot:
+                collision_slots.append(last_collision_slot)
+
+                from_slot = slots.index(last_collision_slot) + 1
+            else:
+                from_slot = len(slots)
+            slots_ = slots[from_slot:]
+
+        return tuple(collision_slots)
+
     # commands:
     def put(self, value: str):
         """
@@ -106,6 +137,7 @@ class HashTable:
         return is_value
 
     def get_capacity(self):
+        """Return hashtable capacity."""
         return self._capacity
 
     # method statuses requests:
