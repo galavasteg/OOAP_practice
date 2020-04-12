@@ -160,11 +160,15 @@ class HT4CollisionTests(HTTestsBase):
                  # ^collisions
 
     def setUp(self):
-        HashTable.STEP = 3
-        super().setUp()
+        ht = HashTable(self.HT_SIZE)
+        ht.step = 3
+
+        for v in self.INIT_ITEMS:
+            ht.put(v)
+
+        self.ht = ht
 
     def test_01_remove_collision_with_rebalance(self):
-        print(tuple(self.ht._values))
         self.ht.remove('2')
 
         actual_values = tuple(self.ht._values)

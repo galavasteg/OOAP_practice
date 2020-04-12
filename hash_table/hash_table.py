@@ -76,8 +76,6 @@ class HashTable:
     REMOVE_OK = 1           # last remove() call completed successfully
     REMOVE_NOVALUE_ERR = 2  # no value in the hashtable
 
-    STEP = 5
-
     def __init__(self, capacity: int):
         """
         Initializing the instance after it's been created.
@@ -91,6 +89,8 @@ class HashTable:
         self._capacity = capacity
         self._values = [None] * self._capacity
 
+        self.step = 5
+
         self._put_status = self.PUT_NIL
         self._remove_status = self.REMOVE_NIL
 
@@ -99,14 +99,14 @@ class HashTable:
         """"""
         yield start_slot
 
-        tmp_slot = start_slot + self.STEP
+        tmp_slot = start_slot + self.step
         within = tmp_slot < self._capacity
         is_busy = within and self._values[tmp_slot] is not None
 
         while is_busy:
             yield tmp_slot
 
-            tmp_slot += self.STEP
+            tmp_slot += self.step
             within = tmp_slot < self._capacity
             is_busy = within and self._values[tmp_slot] is not None
 
@@ -115,7 +115,7 @@ class HashTable:
                           self._next_busy_slot_stepper(start_slot)):
             yield slot
 
-        slot += self.STEP
+        slot += self.step
         is_free = (slot < self._capacity and
                    self._values[slot] is None)
         if is_free:
