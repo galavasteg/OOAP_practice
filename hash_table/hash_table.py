@@ -109,15 +109,23 @@ class HashTable:
             is_busy = within and self._values[tmp_slot] is not None
 
     def _to_free_slot_stepper(self, start_slot: int):
-        for slot in chain((start_slot,),
-                          self._next_busy_slot_stepper(start_slot)):
-            yield slot
-
-        slot += self.step
+        slot = start_slot
         is_free = (slot < self._capacity and
                    self._values[slot] is None)
-        if is_free:
-            yield slot
+        yield slot
+
+        if not is_free:
+            for slot in self._next_busy_slot_stepper(start_slot):
+                is_free = (slot < self._capacity and
+                           self._values[slot] is None)
+                yield slot
+
+        if not is_free:
+            slot += self.step
+            is_free = (slot < self._capacity and
+                       self._values[slot] is None)
+            if is_free:
+                yield slot
 
     def _is_collision(self, of_slot: int, slot: int) -> bool:
         slot_value = self._values[slot]
@@ -168,18 +176,17 @@ class HashTable:
         else:
             self._put_status = self.PUT_COLLISION_ERR
 
-            hash_slot = self._hash_func(value)
+            slot = hash_slot = self._hash_func(value)
             for slot in self._to_free_slot_stepper(hash_slot):
 
                 if self._values[slot] == value:
                     self._put_status = self.PUT_EXISTS_ERR
                     break
 
-                is_free = self._values[slot] is None
-                if is_free:
-                    self._values[slot] = value
-                    self._put_status = self.PUT_OK
-                    break
+            is_free = self._values[slot] is None
+            if is_free:
+                self._values[slot] = value
+                self._put_status = self.PUT_OK
 
     def remove(self, value: str):
         """
