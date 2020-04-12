@@ -29,6 +29,21 @@ CONSTRUCTOR
             - values count in the hashtable is 0.
 
 COMMANDS
+    put(self, value: object) - Put **value** in the hashtable.
+
+        Pre-condition:
+            - the hashtable is not full.
+            - **value** does not exist in hashtable.
+            - no collision resolution error.
+        Post-condition:
+            - the **value** was  put in the hashtable.
+
+    remove(self) - Remove **value** from the hashtable.
+
+        Pre-condition:
+            - **value** exists in the hashtable.
+        Post-condition:
+            - **value** removed from hashtable.
 
 REQUESTS
 
@@ -135,14 +150,14 @@ class HashTable:
     # commands:
     def put(self, value: str):
         """
-        Store **value** into hashtable.
+        Put **value** in the hashtable.
 
         Pre-condition:
-            - the hashtable is not full
-            - **value** does not exist in hashtable
-            - no collision resolution error
+            - the hashtable is not full.
+            - **value** does not exist in hashtable.
+            - no collision resolution error.
         Post-condition:
-            - **value** added to hashtable.
+            - the **value** was  put in the hashtable.
 
         """
         if len(self) >= self._capacity:
@@ -168,9 +183,9 @@ class HashTable:
         Remove **value** from the hashtable.
 
         Pre-condition:
-            - **value** exists in the hashtable
+            - **value** exists in the hashtable.
         Post-condition:
-            - **value** removed from the hashtable
+            - **value** removed from the hashtable.
 
         """
         hash_slot = self._hash_func(value)
