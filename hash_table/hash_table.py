@@ -206,15 +206,12 @@ class HashTable:
                         of_slot=to_remove_slot,
                         slots=next_busy_stepped_slots)
 
-                if collision_slots:
-                    # offset collisions
-                    to_resolve_slots = (to_remove_slot,) + collision_slots
-                    for replace_s, by_s in zip(to_resolve_slots,
-                                               to_resolve_slots[1:]):
-                        self._values[replace_s] = self._values[by_s]
-                    self._values[collision_slots[-1]] = None
-                else:
-                    self._values[to_remove_slot] = None
+                # offset collisions
+                to_resolve_slots = (to_remove_slot,) + collision_slots
+                for replace_s, by_s in zip(to_resolve_slots,
+                                           to_resolve_slots[1:]):
+                    self._values[replace_s] = self._values[by_s]
+                self._values[to_resolve_slots[-1]] = None
 
                 self._remove_status = self.REMOVE_OK
 
