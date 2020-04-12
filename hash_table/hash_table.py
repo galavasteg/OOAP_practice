@@ -97,8 +97,6 @@ class HashTable:
     # additional requests:
     def _next_busy_slot_stepper(self, start_slot: int):
         """"""
-        yield start_slot
-
         tmp_slot = start_slot + self.step
         within = tmp_slot < self._capacity
         is_busy = within and self._values[tmp_slot] is not None
@@ -194,7 +192,8 @@ class HashTable:
 
         """
         hash_slot = self._hash_func(value)
-        slots_stepper = self._next_busy_slot_stepper(hash_slot)
+        slots_stepper = chain((hash_slot,),
+                              self._next_busy_slot_stepper(hash_slot))
 
         self._remove_status = self.REMOVE_NOVALUE_ERR
 
@@ -233,7 +232,8 @@ class HashTable:
     def is_value(self, value: str) -> bool:
         """Check if the value is in the hashtable."""
         hash_slot = self._hash_func(value)
-        for slot in self._next_busy_slot_stepper(hash_slot):
+        for slot in chain((hash_slot,),
+                          self._next_busy_slot_stepper(hash_slot)):
 
             if self._values[slot] == value:
                 return True
