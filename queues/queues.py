@@ -20,7 +20,7 @@ CONSTRUCTOR
         Post-condition:
             - created a new instance.
 
-    __init__(self, max_size: int):
+    __init__(self):
         Initializing the instance after it's been created.
 
         Post-condition:
@@ -76,7 +76,7 @@ CONSTRUCTOR
         Post-condition:
             - created a new instance.
 
-    __init__(self, max_size: int):
+    __init__(self):
         Initializing the instance after it's been created.
 
         Post-condition:
@@ -152,7 +152,6 @@ class __BaseQueue:
             - the queue/deque size is 0.
 
         """
-        super().__init__()
         self._queue = DynamicArray()
 
         self._get_status = self.GET_NIL
