@@ -20,7 +20,7 @@ CONSTRUCTOR
         Post-condition:
             - created a new instance.
 
-    __init__(self, max_size: int):
+    __init__(self):
         Initializing the instance after it's been created.
 
         Post-condition:
@@ -76,7 +76,7 @@ CONSTRUCTOR
         Post-condition:
             - created a new instance.
 
-    __init__(self, max_size: int):
+    __init__(self):
         Initializing the instance after it's been created.
 
         Post-condition:

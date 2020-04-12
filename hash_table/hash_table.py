@@ -138,6 +138,7 @@ class HashTable:
                                    None)
         return last_collision_slot
 
+    # additional commands:
     def _offset_collisions(self, of_slot: int, slots: tuple):
         offset_to_slot = offset_slot = of_slot
         tmp_slots = slots
@@ -149,7 +150,7 @@ class HashTable:
             if offset_slot:
                 self._values[offset_to_slot] = self._values[offset_slot]
                 offset_to_slot = offset_slot
-                
+
                 tmp_slots = slots[slots.index(offset_slot) + 1:]
             else:
                 self._values[offset_to_slot] = None
