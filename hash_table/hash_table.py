@@ -4,7 +4,29 @@ a HashTable implementation.
 
 CONSTANTS
 
+    PUT_NIL            # put() not called yet
+    PUT_OK             # last put() call completed successfully
+    PUT_FULL_ERR       # hashtable is full
+    PUT_EXISTS_ERR     # the value is already in the hashtable
+    PUT_COLLISION_ERR  # can not put because of collisions
+
+    REMOVE_NIL          # remove() not called yet
+    REMOVE_OK           # last remove() call completed successfully
+    REMOVE_NOVALUE_ERR  # no value in the hashtable
+
 CONSTRUCTOR
+
+    __new__(cls) -> new queue instance
+        Post-condition:
+            - created a new instance.
+
+    __init__(self, capacity: int):
+        Initializing the instance after it's been created.
+
+        Post-condition:
+            - method statuses set to initial (*_NIL constants).
+            - max number of values in the hashtable is **capacity**.
+            - values count in the hashtable is 0.
 
 COMMANDS
 
@@ -19,20 +41,26 @@ from itertools import chain
 
 class HashTable:
 
-    PUT_NIL = 0
-    PUT_OK = 1
-    PUT_FULL_ERR = 2
-    PUT_EXISTS_ERR = 3
-    PUT_COLLISION_ERR = 4
+    PUT_NIL = 0            # put() not called yet
+    PUT_OK = 1             # last put() call completed successfully
+    PUT_FULL_ERR = 2       # hashtable is full
+    PUT_EXISTS_ERR = 3     # the value is already in the hashtable
+    PUT_COLLISION_ERR = 4  # can not put because of collisions
 
-    REMOVE_NIL = 0
-    REMOVE_OK = 1
-    REMOVE_NOVALUE_ERR = 2
+    REMOVE_NIL = 0          # remove() not called yet
+    REMOVE_OK = 1           # last remove() call completed successfully
+    REMOVE_NOVALUE_ERR = 2  # no value in the hashtable
 
     STEP = 5
 
     def __init__(self, capacity: int):
         """
+        Initializing the instance after it's been created.
+
+        Post-condition:
+            - method statuses set to initial (*_NIL constants).
+            - max number of values in the hashtable is **capacity**.
+            - values count in the hashtable is 0.
 
         """
         self._capacity = capacity
