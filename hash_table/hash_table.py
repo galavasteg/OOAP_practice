@@ -47,7 +47,17 @@ COMMANDS
 
 REQUESTS
 
+    __len__(self) -> number of values in the hashtable.
+
+    _hash_func(self, value: str) -> **value** slot.
+
+    get_capacity(self) -> max number of values in the hashtable.
+
+    is_value(self, value: str) -> is the **value** in the hashtable?
+
 STATUS REQUESTS
+    get_put_status(self) -> status of last put() call (PUT_* constant).
+    get_remove_status(self) -> status of last remove() call (REMOVE_* constant).
 
 """
 
@@ -85,11 +95,6 @@ class HashTable:
         self._remove_status = self.REMOVE_NIL
 
     # additional requests:
-    def _hash_func(self, value: str) -> int:
-        bStr = value.encode()
-        slot = sum(bStr) % self._capacity
-        return slot
-
     def _next_busy_slot_stepper(self, start_slot: int):
         """"""
         yield start_slot
@@ -215,9 +220,21 @@ class HashTable:
 
     # requests:
     def __len__(self):
+        """Return the number of values in the hashtable."""
         return len(tuple(filter(None.__ne__, self._values)))
 
+    def _hash_func(self, value: str) -> int:
+        """Compute **value** slot"""
+        bStr = value.encode()
+        slot = sum(bStr) % self._capacity
+        return slot
+
+    def get_capacity(self):
+        """Return hashtable capacity."""
+        return self._capacity
+
     def is_value(self, value: str) -> bool:
+        """Check if the value is in the hashtable."""
         hash_slot = self._hash_func(value)
         for slot in self._next_busy_slot_stepper(hash_slot):
 
@@ -225,10 +242,6 @@ class HashTable:
                 return True
 
         return False
-
-    def get_capacity(self):
-        """Return hashtable capacity."""
-        return self._capacity
 
     # method statuses requests:
     def get_put_status(self) -> int:
