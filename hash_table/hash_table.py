@@ -132,31 +132,27 @@ class HashTable:
         is_collision = self._hash_func(slot_value) <= of_slot
         return is_collision
 
-    def _get_last_collision_slot(self, of_slot: int, slots: tuple) -> tuple:
+    def _get_last_collision_slot(self, of_slot: int, slots: tuple) -> int:
         is_collision = lambda s: self._is_collision(of_slot, slot=s)
         last_collision_slot = next(filter(is_collision, reversed(slots)),
                                    None)
         return last_collision_slot
 
-    def _get_collision_slots(self, of_slot: int, slots: tuple) -> tuple:
-        collision_slots = []
+    def _offset_collisions(self, of_slot: int, slots: tuple):
+        offset_to_slot = offset_slot = of_slot
+        tmp_slots = slots
 
-        slots_ = slots
-        of_slot_ = of_slot
+        while offset_slot is not None:
+            offset_slot = self._get_last_collision_slot(
+                    offset_slot, tmp_slots)
 
-        while slots_:
-            of_slot_ = last_collision_slot = self._get_last_collision_slot(
-                    of_slot_, slots_)
-
-            if last_collision_slot:
-                collision_slots.append(last_collision_slot)
-
-                from_slot = slots.index(last_collision_slot) + 1
+            if offset_slot:
+                self._values[offset_to_slot] = self._values[offset_slot]
+                offset_to_slot = offset_slot
+                
+                tmp_slots = slots[slots.index(offset_slot) + 1:]
             else:
-                from_slot = len(slots)
-            slots_ = slots[from_slot:]
-
-        return tuple(collision_slots)
+                self._values[offset_to_slot] = None
 
     # commands:
     def put(self, value: str):
@@ -199,25 +195,17 @@ class HashTable:
 
         """
         hash_slot = self._hash_func(value)
-        slots_stepper = chain((hash_slot,),
+        busy_slot_stepper = chain((hash_slot,),
                               self._next_busy_slot_stepper(hash_slot))
 
         self._remove_status = self.REMOVE_NOVALUE_ERR
-
-        for to_remove_slot in slots_stepper:
+        for to_remove_slot in busy_slot_stepper:
             if self._values[to_remove_slot] == value:
+                next_busy_stepped_slots = tuple(busy_slot_stepper)
 
-                next_busy_stepped_slots = tuple(slots_stepper)
-                collision_slots = self._get_collision_slots(
+                self._offset_collisions(
                         of_slot=to_remove_slot,
                         slots=next_busy_stepped_slots)
-
-                # offset collisions
-                to_resolve_slots = (to_remove_slot,) + collision_slots
-                for replace_s, by_s in zip(to_resolve_slots,
-                                           to_resolve_slots[1:]):
-                    self._values[replace_s] = self._values[by_s]
-                self._values[to_resolve_slots[-1]] = None
 
                 self._remove_status = self.REMOVE_OK
 
