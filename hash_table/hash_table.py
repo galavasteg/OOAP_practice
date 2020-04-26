@@ -194,8 +194,8 @@ class HashTable:
 
         """
         hash_slot = self._hash_func(value)
-        busy_slot_stepper = chain((hash_slot,),
-                              self._next_busy_slot_stepper(hash_slot))
+        busy_slot_stepper = chain(
+            (hash_slot,), self._next_busy_slot_stepper(hash_slot))
 
         self._remove_status = self.REMOVE_NOVALUE_ERR
         for to_remove_slot in busy_slot_stepper:
