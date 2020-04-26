@@ -8,7 +8,6 @@ CONSTANTS
     PUT_OK             # last put() call completed successfully
     PUT_FULL_ERR       # hashtable is full
     PUT_EXISTS_ERR     # the value is already in the hashtable
-    PUT_COLLISION_ERR  # can not put because of collisions
 
     REMOVE_NIL          # remove() not called yet
     REMOVE_OK           # last remove() call completed successfully
@@ -34,7 +33,6 @@ COMMANDS
         Pre-condition:
             - the hashtable is not full.
             - **value** does not exist in hashtable.
-            - no collision resolution error.
         Post-condition:
             - the **value** was  put in the hashtable.
 
@@ -70,7 +68,7 @@ class HashTable:
     PUT_OK = 1             # last put() call completed successfully
     PUT_FULL_ERR = 2       # hashtable is full
     PUT_EXISTS_ERR = 3     # the value is already in the hashtable
-    PUT_COLLISION_ERR = 4  # can not put because of collisions
+    PUT_COLLISION_ERR = 4  # impossible to put because of collisions
 
     REMOVE_NIL = 0          # remove() not called yet
     REMOVE_OK = 1           # last remove() call completed successfully
