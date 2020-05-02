@@ -103,6 +103,20 @@ class D2FilledTests(DictTestsBase):
     def test_05_filled_iskey(self):
         self.assertTrue(self.dict.is_key('4'))
 
+    def test_06_filled_keys_method(self):
+        expected_keys = set(map(lambda k_v: k_v[0],
+                                self.INIT_ITEMS))
+
+        keys = set(self.dict.keys())
+        self.assertEqual(keys, expected_keys)
+
+        keys = set(self.dict)
+        self.assertEqual(keys, expected_keys)
+
+    def test_07_filled_items(self):
+        items = set(self.dict.items())
+        self.assertEqual(items, set(self.INIT_ITEMS))
+
 
 class D3ExpandTests(DictTestsBase):
 
