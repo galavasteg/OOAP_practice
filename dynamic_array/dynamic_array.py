@@ -123,6 +123,11 @@ class _BaseDynamicArray(_BaseAbstractDynamicArray):
         return item
 
     # additional requests:
+    def __iter__(self):
+        """TODO: tests"""
+        for i in range(len(self)):
+            yield self[i]
+
     def __get_new_array(self, capacity: int,
                         elements: Iterable = None) -> ctypes.Array:
         elements = elements or ()

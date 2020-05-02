@@ -15,7 +15,7 @@ CONSTANTS
 
 CONSTRUCTOR
 
-    __new__(cls) -> new queue instance
+    __new__(cls) -> new instance
         Post-condition:
             - created a new instance.
 
@@ -36,7 +36,7 @@ COMMANDS
         Post-condition:
             - the **value** was  put in the hashtable.
 
-    remove(self) - Remove **value** from the hashtable.
+    remove(self, value: str) - Remove **value** from the hashtable.
 
         Pre-condition:
             - **value** exists in the hashtable.
