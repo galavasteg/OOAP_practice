@@ -114,6 +114,54 @@ class D3ExpandTests(DictTestsBase):
     )
     INIT_CAPACITY = 16
 
+    def test_01_setitem_expand(self):
+        expected_capacity = (
+                self.INIT_CAPACITY * Dictionary.CAPACITY_MULTIPLIER)
+
+        self.dict['10'] = 10
+
+        self.assertEqual(self.dict._capacity, expected_capacity)
+
+
+class D3ShrinkTests(DictTestsBase):
+
+    INIT_ITEMS = (
+        ('40', 40), ('17', 17), ('47', 47), ('11', 11),
+        ('41', 41), ('18', 18), ('48', 48), ('12', 12),
+        ('0', 0), ('19', 19), ('49', 49), ('13', 13),
+        ('43', 43), ('22', 22), ('2', 2), ('10', 10)
+    )
+    INIT_CAPACITY = 32
+
+    def test_01_remove_shrink(self):
+        expected_capacity = int(
+                self.INIT_CAPACITY / Dictionary.CAPACITY_DELIMITER)
+
+        self.dict.remove('40')
+
+        self.assertEqual(self.dict._capacity, expected_capacity)
+
+    def test_02_remove_shrink_to_min_capacity(self):
+
+        for _, key in zip(range(6), self.dict.keys()):
+            self.dict.remove(key)
+
+        self.assertEqual(self.dict._capacity,
+                         Dictionary.MIN_CAPACITY)
+
+
+class D5RemoveAllTests(DictTestsBase):
+
+    DICT_SIZE = 10000
+    INIT_ITEMS = tuple(zip(map(str, range(DICT_SIZE)),
+                           range(DICT_SIZE)))
+
+    def test_01_remove_all(self):
+        for key in self.dict:
+            self.dict.remove(key)
+
+        self.assertEqual(len(self.dict), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
