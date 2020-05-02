@@ -98,6 +98,100 @@ class Dictionary:
         self._getitem_status = self.GETITEM_NIL
         self._remove_status = self.REMOVE_NIL
 
+    # additional commands:
+    def _resize(self, new_capacity: int):
+        """Change the capacity and move existing items
+        to the slots corresponding to the **new_capacity**."""
+        items = tuple(self.items())
+
+        self._capacity = new_capacity
+        self._keys = [()] * self._capacity
+        self._values = [()] * self._capacity
+        self._items_count = 0
+        self._busy_slots_count = 0
+        for k, v in items:
+            self.__setitem__(k, v)
+
+    # commands:
+    def __setitem__(self, key: str, value: object):
+        """
+        Put **key**-**value** item in the dictionary.
+
+        Post-condition:
+            - the item was placed in the dictionary.
+
+        """
+        hash_slot = self._hash_func(key)
+
+        if (not self._keys[hash_slot]
+                and self._busy_slots_count + 1 == self._capacity):
+            new_capacity = self._capacity * self.CAPACITY_MULTIPLIER
+            self._resize(new_capacity)
+
+            hash_slot = self._hash_func(key)
+
+        old_subkeys = self._keys[hash_slot]
+        old_subvals = self._values[hash_slot]
+
+        if not old_subkeys:  # set free slot
+            sub_keys = (key,)
+            sub_vals = (value,)
+            self._busy_slots_count += 1
+            self._items_count += 1
+        elif key in old_subkeys:  # update existing key
+            i = old_subkeys.index(key)
+            sub_keys = old_subkeys
+            sub_vals = old_subvals[:i] + (value,) + old_subvals[i + 1:]
+        else:  # add a collision to sub-slots
+            sub_keys = old_subkeys + (key,)
+            sub_vals = old_subvals + (value,)
+            self._items_count += 1
+
+        self._keys[hash_slot] = sub_keys
+        self._values[hash_slot] = sub_vals
+
+    def remove(self, key: str):
+        """
+        Remove an item from the dictionary by the item **key**.
+
+        Pre-condition:
+            - **key** exists in the dictionary.
+        Post-condition:
+            - item removed from dictionary.
+
+        """
+        hash_slot = self._hash_func(key)
+
+        if key not in self._keys[hash_slot]:
+            self._remove_status = self.REMOVE_KEY_ERR
+            return
+
+        old_subkeys = self._keys[hash_slot]
+        old_subvals = self._values[hash_slot]
+        subslot = old_subkeys.index(key)
+
+        sub_keys = old_subkeys[:subslot] + old_subkeys[subslot + 1:]
+        sub_vals = old_subvals[:subslot] + old_subvals[subslot + 1:]
+        self._keys[hash_slot] = sub_keys
+        self._values[hash_slot] = sub_vals
+
+        self._items_count -= 1
+
+        if not sub_keys:  # free slot
+            self._busy_slots_count -= 1
+            fill_percent = self._busy_slots_count / self._capacity * 100
+            shrink = (self._capacity > self.MIN_CAPACITY
+                      and fill_percent < self.FILL_THRESHOLD_PERCENT)
+            if shrink:
+
+                new_capacity = int(self._capacity / self.CAPACITY_DELIMITER)
+                if new_capacity < self.MIN_CAPACITY:
+                    new_capacity = self.MIN_CAPACITY
+
+                self._resize(new_capacity)
+
+        self._remove_status = self.REMOVE_OK
+
     # additional requests
     def __iter__(self):
         """Iterate keys."""
