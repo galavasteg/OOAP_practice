@@ -57,7 +57,7 @@ STATUS REQUESTS
 
 """
 
-from dynamic_array import DynamicArray
+import base64
 
 
 class Dictionary:
@@ -97,3 +97,74 @@ class Dictionary:
 
         self._getitem_status = self.GETITEM_NIL
         self._remove_status = self.REMOVE_NIL
+
+    # additional requests
+    def __iter__(self):
+        """Iterate keys."""
+        return self.keys()
+
+    def keys(self):
+        """Iterate keys."""
+        for sub_keys in self._keys:
+            if sub_keys:
+                for k in sub_keys:
+                    yield k
+
+    def items(self):
+        """Iterate items."""
+        for sub_keys, sub_vals in zip(self._keys, self._values):
+            if sub_keys:
+                for item in zip(sub_keys, sub_vals):
+                    yield item
+
+    def is_key(self, key: str) -> bool:
+        """Check if the **key** is in the dictionary."""
+        hash_slot = self._hash_func(key)
+        slot_keys = self._keys[hash_slot]
+        is_key = key in slot_keys
+        return is_key
+
+    # requests:
+    def __len__(self) -> int:
+        """Get the number of items in the dictionary."""
+        return self._items_count
+
+    def __getitem__(self, key: str) -> object:
+        """
+        Get the item value by item **key**.
+
+        Pre-condition:
+            - **key** exists in the dictionary.
+
+        """
+        hash_slot = self._hash_func(key)
+        subkeys = self._keys[hash_slot]
+
+        if key not in subkeys:
+            self._getitem_status = self.GETITEM_KEY_ERR
+            return None
+
+        subslot = subkeys.index(key)
+        value = self._values[hash_slot][subslot]
+
+        self._getitem_status = self.GETITEM_OK
+
+        return value
+
+    def _hash_func(self, key: str) -> int:
+        """Compute **key** slot"""
+        b_string = key.encode()
+        hash_string = base64.encodebytes(b_string)[:-1]  # exclude last '/n'
+        slot = sum(hash_string) % self._capacity
+        return slot
+
+    # method statuses requests:
+    def get_getitem_status(self) -> int:
+        """Return status of last __getitem__() call:
+        one of the GETITEM_* constants."""
+        return self._getitem_status
+
+    def get_remove_status(self) -> int:
+        """Return status of last remove() call:
+        one of the REMOVE_* constants."""
+        return self._remove_status
