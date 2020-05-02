@@ -62,45 +62,45 @@ class D1EmptyTests(DictTestsBase):
         self.assertFalse(self.dict.is_key('item'))
 
 
-class D2PartialFilledTests(DictTestsBase):
+class D2FilledTests(DictTestsBase):
 
     INIT_ITEMS = (('0', 0), ('4', 4), )
 
-    def test_01_partial_filled_getitem_ok(self):
+    def test_01_filled_getitem_ok(self):
         four = self.dict['4']
 
         self.assertEqual(four, 4)
         self.assertEqual(self.dict.get_getitem_status(),
                          Dictionary.GETITEM_OK)
 
-    def test_02_partial_filled_setitem_update(self):
+    def test_02_filled_setitem_update(self):
         self.dict['4'] = 44
 
         self.assertEqual(self.dict['4'], 44)
         self.assertEqual(len(self.dict),
                          len(self.INIT_ITEMS))
 
-    def test_03_partial_filled_setitem_collision(self):
+    def test_03_filled_setitem_collision(self):
         self.dict['5'] = 5
 
         self.assertEqual(self.dict['5'], 5)
         self.assertEqual(len(self.dict),
                          len(self.INIT_ITEMS) + 1)
-        self.assertEqual(self.dict._busy_slot_count,
+        self.assertEqual(self.dict._busy_slots_count,
                          len(self.INIT_ITEMS))
 
-    def test_04_partial_filled_remove_ok(self):
+    def test_04_filled_remove_ok(self):
         self.dict.remove('4')
 
         self.assertFalse(self.dict.is_key('4'))
         self.assertEqual(len(self.dict),
                          len(self.INIT_ITEMS) - 1)
-        self.assertEqual(self.dict._busy_slot_count,
+        self.assertEqual(self.dict._busy_slots_count,
                          len(self.INIT_ITEMS) - 1)
         self.assertEqual(self.dict.get_remove_status(),
                          Dictionary.REMOVE_OK)
 
-    def test_05_partial_filled_iskey(self):
+    def test_05_filled_iskey(self):
         self.assertTrue(self.dict.is_key('4'))
 
 
@@ -110,8 +110,9 @@ class D3ExpandTests(DictTestsBase):
         ('40', 40), ('17', 17), ('47', 47), ('11', 11),
         ('41', 41), ('18', 18), ('48', 48), ('12', 12),
         ('0', 0), ('19', 19), ('49', 49), ('13', 13),
-        ('43', 43), ('22', 22), ('2', 2), ('10', 10),
+        ('43', 43), ('22', 22), ('2', 2),
     )
+    INIT_CAPACITY = 16
 
 
 if __name__ == '__main__':
