@@ -62,15 +62,38 @@ from dynamic_array import DynamicArray
 
 class Dictionary:
 
+    GETITEM_NIL = 0       # __getitem__() not called yet
+    GETITEM_OK = 1        # last __getitem__() returned correct value
+    GETITEM_KEY_ERR = 2   # in not key of the dictionary
+
+    REMOVE_NIL = 0      # remove() not called yet
+    REMOVE_OK = 1       # last remove() call completed successfully
+    REMOVE_KEY_ERR = 2  # is no key of the dictionary
+
+    INITIAL_CAPACITY = 16
+
+    # for resize in __setitem__()
+    CAPACITY_MULTIPLIER = 2
+
+    # for resize in remove()
+    FILL_THRESHOLD_PERCENT = 50
+    CAPACITY_DELIMITER = 1.5
+    MIN_CAPACITY = 16
+
     def __init__(self):
         """
         Initializing the instance after it's been created.
 
+        Post-condition:
+            - items count in the dictionary is 0.
+            - method statuses set to initial (*_NIL constants).
+
         """
-        self._keys = DynamicArray()
-        self._values = DynamicArray()
-        self._size = 0
-        self._capacity = self._keys.get_capacity()
-        for i in range(self._capacity):
-            self._keys.insert(i, ())
-            self._values.insert(i, ())
+        self._capacity = self.INITIAL_CAPACITY
+        self._keys = [()] * self._capacity
+        self._values = [()] * self._capacity
+        self._items_count = 0
+        self._busy_slots_count = 0
+
+        self._getitem_status = self.GETITEM_NIL
+        self._remove_status = self.REMOVE_NIL
