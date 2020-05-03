@@ -31,12 +31,14 @@ class D1EmptyTests(DictTestsBase):
         self.assertTupleEqual(actual_params, expected_params)
 
         actual_statuses = (
-                d.get_getitem_status(),
+                d.get_setitem_status(),
                 d.get_remove_status(),
+                d.get_getitem_status(),
             )
         expected_statuses = (
-                Dictionary.GETITEM_NIL,
+                Dictionary.SETITEM_NIL,
                 Dictionary.REMOVE_NIL,
+                Dictionary.GETITEM_NIL,
             )
         self.assertTupleEqual(actual_statuses, expected_statuses)
 
@@ -51,6 +53,8 @@ class D1EmptyTests(DictTestsBase):
 
         self.assertEqual(self.dict['item'], 13)
         self.assertEqual(len(self.dict), 1)
+        self.assertEqual(self.dict.get_setitem_status(),
+                         Dictionary.SETITEM_NEW)
 
     def test_04_empty_remove_bad(self):
         self.dict.remove('item')
@@ -79,6 +83,8 @@ class D2FilledTests(DictTestsBase):
         self.assertEqual(self.dict['4'], 44)
         self.assertEqual(len(self.dict),
                          len(self.INIT_ITEMS))
+        self.assertEqual(self.dict.get_setitem_status(),
+                         Dictionary.SETITEM_UPDATE)
 
     def test_03_filled_setitem_collision(self):
         self.dict['5'] = 5
@@ -88,6 +94,8 @@ class D2FilledTests(DictTestsBase):
                          len(self.INIT_ITEMS) + 1)
         self.assertEqual(self.dict._busy_slots_count,
                          len(self.INIT_ITEMS))
+        self.assertEqual(self.dict.get_setitem_status(),
+                         Dictionary.SETITEM_NEW)
 
     def test_04_filled_remove_ok(self):
         self.dict.remove('4')
