@@ -65,13 +65,17 @@ import base64
 
 class Dictionary:
 
-    GETITEM_NIL = 0       # __getitem__() not called yet
-    GETITEM_OK = 1        # last __getitem__() returned correct value
-    GETITEM_KEY_ERR = 2   # in not key of the dictionary
+    SETITEM_NIL = 0     # __setitem__() not called yet
+    SETITEM_NEW = 1     # last __setitem__() created a new item
+    SETITEM_UPDATE = 2  # last __setitem__() updated value of existing item
 
     REMOVE_NIL = 0      # remove() not called yet
     REMOVE_OK = 1       # last remove() call completed successfully
     REMOVE_KEY_ERR = 2  # is no key of the dictionary
+
+    GETITEM_NIL = 0       # __getitem__() not called yet
+    GETITEM_OK = 1        # last __getitem__() returned correct value
+    GETITEM_KEY_ERR = 2   # in not key of the dictionary
 
     INITIAL_CAPACITY = 16
 
@@ -98,8 +102,9 @@ class Dictionary:
         self._items_count = 0
         self._busy_slots_count = 0
 
-        self._getitem_status = self.GETITEM_NIL
+        self._setitem_status = self.SETITEM_NIL
         self._remove_status = self.REMOVE_NIL
+        self._getitem_status = self.GETITEM_NIL
 
     # additional commands:
     def _resize(self, new_capacity: int):
@@ -142,6 +147,7 @@ class Dictionary:
             sub_keys = old_subkeys
             sub_vals = old_subvals[:i] + (value,) + old_subvals[i + 1:]
 
+            self._setitem_status = self.SETITEM_UPDATE
         else:  # add a new item (maybe collision)
 
             sub_keys = old_subkeys + (key,)
@@ -150,6 +156,7 @@ class Dictionary:
             if old_subkeys == ():  # is free slot, not collision
                 self._busy_slots_count += 1
             self._items_count += 1
+            self._setitem_status = self.SETITEM_NEW
 
         self._keys[hash_slot] = sub_keys
         self._values[hash_slot] = sub_vals
@@ -257,12 +264,17 @@ class Dictionary:
         return slot
 
     # method statuses requests:
-    def get_getitem_status(self) -> int:
-        """Return status of last __getitem__() call:
-        one of the GETITEM_* constants."""
-        return self._getitem_status
+    def get_setitem_status(self) -> int:
+        """Return status of last __setitem__() call:
+        one of the SETITEM_* constants."""
+        return self._setitem_status
 
     def get_remove_status(self) -> int:
         """Return status of last remove() call:
         one of the REMOVE_* constants."""
         return self._remove_status
+
+    def get_getitem_status(self) -> int:
+        """Return status of last __getitem__() call:
+        one of the GETITEM_* constants."""
+        return self._getitem_status
