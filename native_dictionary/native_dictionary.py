@@ -4,13 +4,17 @@ a Dictionary implementation.
 
 CONSTANTS
 
-    GETITEM_NIL       # __getitem__() not called yet
-    GETITEM_OK        # last __getitem__() returned correct value
-    GETITEM_KEY_ERR   # in not key of the dictionary
+    SETITEM_NIL     # __setitem__() not called yet
+    SETITEM_NEW     # last __setitem__() created a new item
+    SETITEM_UPDATE  # last __setitem__() updated value of existing item
 
     REMOVE_NIL      # remove() not called yet
     REMOVE_OK       # last remove() call completed successfully
     REMOVE_KEY_ERR  # is no key of the dictionary
+
+    GETITEM_NIL       # __getitem__() not called yet
+    GETITEM_OK        # last __getitem__() returned correct value
+    GETITEM_KEY_ERR   # in not key of the dictionary
 
 CONSTRUCTOR
 
@@ -28,10 +32,10 @@ CONSTRUCTOR
 COMMANDS
 
     __setitem__(self, key: str, value: object):
-        Put **key**-**value** item in the dictionary.
+        Put/update **key**-**value** item in the dictionary.
 
         Post-condition:
-            - the item was placed in the dictionary.
+            - the item was placed/updated in the dictionary.
 
     remove(self, key: str):
         Remove an item from the dictionary by the item **key**.
@@ -50,8 +54,9 @@ REQUESTS
             - **key** exists in the dictionary.
 
 STATUS REQUESTS
-    get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant).
+    get_setitem_status(self) -> status of last __setitem__() call (SETITEM_* constant).
     get_remove_status(self) -> status of last remove() call (REMOVE_* constant).
+    get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant).
 
 """
 
