@@ -136,18 +136,19 @@ class Dictionary:
         old_subkeys = self._keys[hash_slot]
         old_subvals = self._values[hash_slot]
 
-        if not old_subkeys:  # set free slot
-            sub_keys = (key,)
-            sub_vals = (value,)
-            self._busy_slots_count += 1
-            self._items_count += 1
-        elif key in old_subkeys:  # update existing key
+        if key in old_subkeys:  # update existing key
             i = old_subkeys.index(key)
+
             sub_keys = old_subkeys
             sub_vals = old_subvals[:i] + (value,) + old_subvals[i + 1:]
-        else:  # add a collision to sub-slots
+
+        else:  # add a new item (maybe collision)
+
             sub_keys = old_subkeys + (key,)
             sub_vals = old_subvals + (value,)
+
+            if old_subkeys == ():  # is free slot, not collision
+                self._busy_slots_count += 1
             self._items_count += 1
 
         self._keys[hash_slot] = sub_keys
