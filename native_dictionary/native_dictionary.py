@@ -49,8 +49,6 @@ REQUESTS
         Pre-condition:
             - **key** exists in the dictionary.
 
-    _hash_func(self, key: str) -> **key** slot.
-
 STATUS REQUESTS
     get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant).
     get_remove_status(self) -> status of last remove() call (REMOVE_* constant).
