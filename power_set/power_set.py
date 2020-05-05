@@ -87,12 +87,24 @@ class PowerSet(HashTable):
         """
         Iterate over values in a set.
 
+        >>> set_ = PowerSet(capacity=12)
+        >>> set_.put('1')
+        >>> set_.put('2')
+        >>> tuple(set_)
+        ('1', '2')
+
         """
         yield from filter(None, self._values)
 
     def __repr__(self) -> str:
         """
         Represent values of a set.
+
+        >>> set_ = PowerSet(capacity=12)
+        >>> set_.put('1')
+        >>> set_.put('2')
+        >>> set_
+        {'1', '2'}
 
         """
         s = '{%s}' % ', '.join(map(repr, self))
@@ -103,6 +115,19 @@ class PowerSet(HashTable):
         """
         Return a set of a **self**-set elements that
         also belong to **with_set**.
+
+        >>> set_ = PowerSet(12)
+        >>> with_set = PowerSet(12)
+        >>> print('%s.intersection(%s) = %s' % (
+        ...         set_, with_set, set_.intersection(with_set)))
+        {}.intersection({}) = {}
+        >>> for v1, v2 in zip(('1', '2', '3'),
+        ...                   ('_', '2', '_')):
+        ...     set_.put(v1)
+        ...     with_set.put(v2)
+        >>> print('%s.intersection(%s) = %s' % (
+        ...         set_, with_set, set_.intersection(with_set)))
+        {'1', '2', '3'}.intersection({'2', '_'}) = {'2'}
 
         """
         intersection_set = self.__class__(self.get_capacity())
@@ -115,6 +140,19 @@ class PowerSet(HashTable):
     def union(self, with_set: 'PowerSet') -> 'PowerSet':
         """
         Return a set of all elements in both sets.
+
+        >>> set_ = PowerSet(12)
+        >>> with_set = PowerSet(12)
+        >>> print('%s.union(%s) -> %s' % (
+        ...         set_, with_set, set_.union(with_set)))
+        {}.union({}) -> {}
+        >>> for v1, v2 in zip(('1', '2', '3'),
+        ...                   ('_', '2', '_')):
+        ...     set_.put(v1)
+        ...     with_set.put(v2)
+        >>> print('%s.union(%s) -> %s' % (
+        ...         set_, with_set, set_.union(with_set)))
+        {'1', '2', '3'}.union({'2', '_'}) -> {'1', '2', '3', '_'}
 
         """
         union_count = len(self) + len(with_set)
@@ -133,6 +171,19 @@ class PowerSet(HashTable):
         Return a set of elements in a **self**-set but
         not in **with_set**.
 
+        >>> set_ = PowerSet(12)
+        >>> with_set = PowerSet(12)
+        >>> print('%s.difference(%s) -> %s' % (
+        ...         set_, with_set, set_.difference(with_set)))
+        {}.difference({}) -> {}
+        >>> for v1, v2 in zip(('1', '2', '3'),
+        ...                   ('_', '2', '_')):
+        ...     set_.put(v1)
+        ...     with_set.put(v2)
+        >>> print('%s.difference(%s) -> %s' % (
+        ...         set_, with_set, set_.difference(with_set)))
+        {'1', '2', '3'}.difference({'2', '_'}) -> {'1', '3'}
+
         """
         diff_set = self.__class__(self.get_capacity())
 
@@ -145,6 +196,28 @@ class PowerSet(HashTable):
         """
         Check if all elements in a **self**-set are in **of_set**.
 
+        >>> set_ = PowerSet(12)
+        >>> of_set = PowerSet(12)
+        >>> print('%s.is_subset(%s) -> %s' % (
+        ...         set_, of_set, set_.is_subset(of_set)))
+        {}.is_subset({}) -> True
+        >>> for v1, v2 in zip(('_', '2', '_'),
+        ...                   ('1', '2', '3')):
+        ...     set_.put(v1)
+        ...     of_set.put(v2)
+        >>> print('%s.is_subset(%s) -> %s' % (
+        ...         set_, of_set, set_.is_subset(of_set)))
+        {'2', '_'}.is_subset({'1', '2', '3'}) -> False
+        >>> set_.remove('_')
+        >>> print('%s.is_subset(%s) -> %s' % (
+        ...         set_, of_set, set_.is_subset(of_set)))
+        {'2'}.is_subset({'1', '2', '3'}) -> True
+
         """
         is_subset = all(map(of_set.is_value, self))
         return is_subset
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
