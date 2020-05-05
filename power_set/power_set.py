@@ -75,6 +75,8 @@ REQUESTS
 
 """
 
+from itertools import chain, filterfalse
+
 from hash_table import HashTable
 
 
@@ -95,3 +97,54 @@ class PowerSet(HashTable):
         """
         s = '{%s}' % ', '.join(map(repr, self))
         return s
+
+    # requests:
+    def intersection(self, with_set: 'PowerSet') -> 'PowerSet':
+        """
+        Return a set of a **self**-set elements that
+        also belong to **with_set**.
+
+        """
+        intersection_set = self.__class__(self.get_capacity())
+
+        for value in filter(self.is_value, with_set):
+            intersection_set.put(value)
+
+        return intersection_set
+
+    def union(self, with_set: 'PowerSet') -> 'PowerSet':
+        """
+        Return a set of all elements in both sets.
+
+        """
+        union_count = len(self) + len(with_set)
+        capacity = self.get_capacity()
+        if union_count > capacity:
+            capacity = union_count
+        union_set = self.__class__(capacity)
+
+        for value in chain(self, with_set):
+            union_set.put(value)
+
+        return union_set
+
+    def difference(self, with_set: 'PowerSet') -> 'PowerSet':
+        """
+        Return a set of elements in a **self**-set but
+        not in **with_set**.
+
+        """
+        diff_set = self.__class__(self.get_capacity())
+
+        for value in filterfalse(with_set.is_value, self):
+            diff_set.put(value)
+
+        return diff_set
+
+    def is_subset(self, of_set: 'PowerSet') -> bool:
+        """
+        Check if all elements in a **self**-set are in **of_set**.
+
+        """
+        is_subset = all(map(of_set.is_value, self))
+        return is_subset
