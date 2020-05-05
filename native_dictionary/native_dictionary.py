@@ -4,13 +4,17 @@ a Dictionary implementation.
 
 CONSTANTS
 
-    GETITEM_NIL       # __getitem__() not called yet
-    GETITEM_OK        # last __getitem__() returned correct value
-    GETITEM_KEY_ERR   # in not key of the dictionary
+    SETITEM_NIL     # __setitem__() not called yet
+    SETITEM_NEW     # last __setitem__() created a new item
+    SETITEM_UPDATE  # last __setitem__() updated value of existing item
 
     REMOVE_NIL      # remove() not called yet
     REMOVE_OK       # last remove() call completed successfully
     REMOVE_KEY_ERR  # is no key of the dictionary
+
+    GETITEM_NIL       # __getitem__() not called yet
+    GETITEM_OK        # last __getitem__() returned correct value
+    GETITEM_KEY_ERR   # in not key of the dictionary
 
 CONSTRUCTOR
 
@@ -28,10 +32,10 @@ CONSTRUCTOR
 COMMANDS
 
     __setitem__(self, key: str, value: object):
-        Put **key**-**value** item in the dictionary.
+        Put/update **key**-**value** item in the dictionary.
 
         Post-condition:
-            - the item was placed in the dictionary.
+            - the item was placed/updated in the dictionary.
 
     remove(self, key: str):
         Remove an item from the dictionary by the item **key**.
@@ -49,11 +53,10 @@ REQUESTS
         Pre-condition:
             - **key** exists in the dictionary.
 
-    _hash_func(self, key: str) -> **key** slot.
-
 STATUS REQUESTS
-    get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant).
+    get_setitem_status(self) -> status of last __setitem__() call (SETITEM_* constant).
     get_remove_status(self) -> status of last remove() call (REMOVE_* constant).
+    get_getitem_status(self) -> status of last __getitem__() call (GETITEM_* constant).
 
 """
 
@@ -62,13 +65,17 @@ import base64
 
 class Dictionary:
 
-    GETITEM_NIL = 0       # __getitem__() not called yet
-    GETITEM_OK = 1        # last __getitem__() returned correct value
-    GETITEM_KEY_ERR = 2   # in not key of the dictionary
+    SETITEM_NIL = 0     # __setitem__() not called yet
+    SETITEM_NEW = 1     # last __setitem__() created a new item
+    SETITEM_UPDATE = 2  # last __setitem__() updated value of existing item
 
     REMOVE_NIL = 0      # remove() not called yet
     REMOVE_OK = 1       # last remove() call completed successfully
     REMOVE_KEY_ERR = 2  # is no key of the dictionary
+
+    GETITEM_NIL = 0       # __getitem__() not called yet
+    GETITEM_OK = 1        # last __getitem__() returned correct value
+    GETITEM_KEY_ERR = 2   # in not key of the dictionary
 
     INITIAL_CAPACITY = 16
 
@@ -95,8 +102,9 @@ class Dictionary:
         self._items_count = 0
         self._busy_slots_count = 0
 
-        self._getitem_status = self.GETITEM_NIL
+        self._setitem_status = self.SETITEM_NIL
         self._remove_status = self.REMOVE_NIL
+        self._getitem_status = self.GETITEM_NIL
 
     # additional commands:
     def _resize(self, new_capacity: int):
@@ -133,19 +141,22 @@ class Dictionary:
         old_subkeys = self._keys[hash_slot]
         old_subvals = self._values[hash_slot]
 
-        if not old_subkeys:  # set free slot
-            sub_keys = (key,)
-            sub_vals = (value,)
-            self._busy_slots_count += 1
-            self._items_count += 1
-        elif key in old_subkeys:  # update existing key
+        if key in old_subkeys:  # update existing key
             i = old_subkeys.index(key)
+
             sub_keys = old_subkeys
             sub_vals = old_subvals[:i] + (value,) + old_subvals[i + 1:]
-        else:  # add a collision to sub-slots
+
+            self._setitem_status = self.SETITEM_UPDATE
+        else:  # add a new item (maybe collision)
+
             sub_keys = old_subkeys + (key,)
             sub_vals = old_subvals + (value,)
+
+            if old_subkeys == ():  # is free slot, not collision
+                self._busy_slots_count += 1
             self._items_count += 1
+            self._setitem_status = self.SETITEM_NEW
 
         self._keys[hash_slot] = sub_keys
         self._values[hash_slot] = sub_vals
@@ -253,12 +264,17 @@ class Dictionary:
         return slot
 
     # method statuses requests:
-    def get_getitem_status(self) -> int:
-        """Return status of last __getitem__() call:
-        one of the GETITEM_* constants."""
-        return self._getitem_status
+    def get_setitem_status(self) -> int:
+        """Return status of last __setitem__() call:
+        one of the SETITEM_* constants."""
+        return self._setitem_status
 
     def get_remove_status(self) -> int:
         """Return status of last remove() call:
         one of the REMOVE_* constants."""
         return self._remove_status
+
+    def get_getitem_status(self) -> int:
+        """Return status of last __getitem__() call:
+        one of the GETITEM_* constants."""
+        return self._getitem_status
