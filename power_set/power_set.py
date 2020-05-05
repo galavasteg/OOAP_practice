@@ -65,7 +65,7 @@ STATUS REQUESTS
 
 REQUESTS
 
-    intersection(self, with_set) -> a set of a **self**-set elements that also belong to with_set.
+    intersection(self, with_set) -> a set of a **self**-set elements that also belong to **with_set**.
 
     union(self, with_set) -> a set of all elements in both sets.
 
