@@ -1,1 +1,1 @@
-from .power_set import Set
+from .power_set import PowerSet

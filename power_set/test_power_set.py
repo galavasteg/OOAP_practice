@@ -1,6 +1,6 @@
 import unittest
 
-from power_set import Set
+from power_set import PowerSet
 
 
 class PowerSetTestsBase(unittest.TestCase):
@@ -11,7 +11,7 @@ class PowerSetTestsBase(unittest.TestCase):
         if self.INIT_ITEMS is None:
             raise AttributeError('Set INIT_ITEMS')
 
-        s = Set()
+        s = PowerSet()
 
         for v in self.INIT_ITEMS:
             s.put(v)
