@@ -80,10 +80,18 @@ from hash_table import HashTable
 
 class PowerSet(HashTable):
 
-
-
-    def __init__(self):
+    # additional requests:
+    def __iter__(self):  # -> typing.Iterator[str]
         """
-        Initializing the instance after it's been created.
+        Iterate over values in a set.
 
         """
+        yield from filter(None, self._values)
+
+    def __repr__(self) -> str:
+        """
+        Represent values of a set.
+
+        """
+        s = '{%s}' % ', '.join(map(repr, self))
+        return s
