@@ -145,7 +145,19 @@ class BloomFilter:
 
         :param value: string.
 
+        >>> bf = BloomFilter(4)
+        >>> bf.add('foo')
+        >>> bf.is_value('foo')
+        True
+        >>> bf.is_value('bar')
+        False
+        >>> bf.is_value('')  # false positive
+        True
+
         """
+        bits = self._get_value_bit_positions(value)
+        is_value = self._busy_bit_set.issuperset(bits)
+        return is_value
 
 
 if __name__ == "__main__":
