@@ -8,7 +8,7 @@ CONSTRUCTOR
         Post-condition:
             - created a new instance.
 
-    __init__(self, capacity: int):
+    __init__(self, size: int):
         Initializing the instance after it's been created.
 
         Post-condition:
@@ -25,7 +25,7 @@ REQUESTS
 
     get_size(self) -> filter size.
 
-    is_value(self, value: str) -> is the **value** matches the filter?
+    is_value(self, value: object) -> is the **value** matches the filter?
 
 """
 
