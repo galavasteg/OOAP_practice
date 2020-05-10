@@ -119,13 +119,25 @@ class BloomFilter:
 
         :param value: string.
 
+        >>> bf = BloomFilter(5)
+        >>> bf.add('foo')
+        >>> bf.is_value('foo'), bf._get_bit_mask()
+        (True, '10010')
+
         """
+        bits = self._get_value_bit_positions(value)
+        self._busy_bit_set.update(bits)
 
     # requests:
     def get_size(self) -> int:
         """
         Return filter size.
+
+        >>> BloomFilter(4).get_size()
+        4
+
         """
+        return self._size
 
     def is_value(self, value: str) -> bool:
         """
