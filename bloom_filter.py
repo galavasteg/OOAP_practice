@@ -50,6 +50,32 @@ class BloomFilter:
         self._size = size
 
     # additional requests:
+    def __or__(self, b_filter: 'BloomFilter') -> 'BloomFilter':
+        """
+        Return new filter as a union of this and **b_filter**.
+        Both filters must be the same size.
+
+        :param b_filter: a BloomFilter the size of this filter
+        :return: new BloomFilter.
+
+        >>> bf1, bf2 = BloomFilter(6), BloomFilter(6)
+        >>> bf1.add('foo')
+        >>> bf2.add('bar')
+        >>> bf3 = bf1 | bf2
+        >>> print('%s | %s = %s' % tuple(
+        ...         bf._get_bit_mask() for bf
+        ...         in (bf1, bf2, bf3)))
+        000001 | 001010 = 001011
+
+        """
+        assert self._size == b_filter._size
+        new_filter = type(self)(self._size)
+
+        new_filter._busy_bit_set = self._busy_bit_set.union(
+                b_filter._busy_bit_set)
+
+        return new_filter
+
     def _get_bit_mask(self) -> str:
         """
         Return the filter bit mask.
