@@ -29,6 +29,7 @@ REQUESTS
 
 """
 
+import operator
 from functools import reduce
 
 
@@ -49,6 +50,26 @@ class BloomFilter:
         self._size = size
 
     # additional requests:
+    def _get_bit_mask(self) -> str:
+        """
+        Return the filter bit mask.
+
+        :return: bit mask of this filter.
+
+        >>> bf = BloomFilter(5)
+        >>> bf._get_bit_mask()
+        '00000'
+        >>> bf.add('foo')
+        >>> bf._get_bit_mask()
+        '10010'
+
+        """
+        mask = bin(reduce(operator.or_,
+                          (2**b for b in self._busy_bit_set),
+                          2**self._size))
+        clean_mask = mask[3:]  # cut off '0b1...'
+        return clean_mask
+
     def _hash1(self, value: str) -> int:
         """
         Map the **value** to the bit position on the
