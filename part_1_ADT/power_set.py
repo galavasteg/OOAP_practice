@@ -77,7 +77,7 @@ REQUESTS
 
 from itertools import chain, filterfalse
 
-from hash_table import HashTable
+from part_1_ADT.hash_table import HashTable
 
 
 class PowerSet(HashTable):

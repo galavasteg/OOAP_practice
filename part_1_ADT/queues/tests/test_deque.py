@@ -2,8 +2,8 @@ from random import choice
 import unittest
 
 from _base import StructureTestsBase
-from queues import Deque
-from dynamic_array import DynamicArray
+from part_1_ADT.queues import Deque
+from part_1_ADT.dynamic_array import DynamicArray
 
 
 class DequeTestsBase(StructureTestsBase):

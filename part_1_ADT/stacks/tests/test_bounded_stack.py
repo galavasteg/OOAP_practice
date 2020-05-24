@@ -1,6 +1,6 @@
 import unittest
 
-from stacks.bounded_stack import BoundedStack as BStack
+from part_1_ADT.stacks import BoundedStack as BStack
 
 
 def _get_filled_stack(*vals) -> BStack:

@@ -129,7 +129,7 @@ STATUS REQUESTS
 
 """
 
-from dynamic_array import DynamicArray
+from part_1_ADT.dynamic_array import DynamicArray
 
 
 class __BaseQueue:
