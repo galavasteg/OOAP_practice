@@ -19,31 +19,32 @@ in Python.
 # Write a small code example with comments where
 # inheritance, composition, and polymorphism are applied.
 
-class HasWheels:
-    def __init__(self, w_count: int):
-        self.wheel_count = w_count
-        print('I have %s wheels' % w_count)
+class Wheel:
+    def __init__(self):
+        print('wheel...')
 
 
 # Composition: Bicycle "has-a" wheel(s)
 class Bicycle:
     """
     >>> b = Bicycle()
-    I have 2 wheels
+    wheel...
+    wheel...
     """
-    def __init__(self, wheels: int = 2):
-        self.wheels = HasWheels(wheels)
+    def __init__(self, wheel_count: int = 2):
+        self.wheels = [Wheel() for _ in range(wheel_count)]
 
 
 # Inheritance <==> "is-a"
 # Polymorphism: Monocycle "is-a" Bicycle with one wheel
-class Monocycle(Bicycle):
+class Bike(Bicycle):
     """
-    >>> mono = Monocycle()
-    I have 1 wheels
+    >>> bike = Bike()
+    wheel...
+    wheel...
     """
     def __init__(self):
-        super().__init__(wheels=1)
+        super().__init__(wheel_count=2)
 
 
 # -------------------- Task 2 -----------------------
@@ -51,27 +52,26 @@ class Monocycle(Bicycle):
 # inheritance applies both the extension of the parent class
 # and the specialization of the parent class.
 
-class HasEngine:
+class Engine:
     def __init__(self, power: float):
         self.power = power
-        print('My power is', power)
+        print('engine power is', power)
 
 
-# Inheritance: Motorcycle "is-a" Bicycle with one
-#              wheel and with an engine
-class MotoMonocycle(Bicycle):
+# Specialization: road bicycles are a subset of bicycles
+# Extension: bicycle extended by an engine
+class ElectricRoadBicycle(Bicycle):
     """
-    >>> m = MotoMonocycle(power=20.5)
-    I have 1 wheels
-    My power is 20.5
+    >>> m = ElectricRoadBicycle(power=20.5)
+    wheel...
+    wheel...
+    engine power is 20.5
     I can a-ron-don-don!
     """
     def __init__(self, power: float):
-        # Specialization: monocycles are a subset of bicycles
-        super().__init__(wheels=1)
+        super().__init__()
 
-        # Extension: MotoMonocycle extends Bicycle with an engine
-        self.engine = HasEngine(power)
+        self.engine = Engine(power)
 
         print('I can a-ron-don-don!')
 
