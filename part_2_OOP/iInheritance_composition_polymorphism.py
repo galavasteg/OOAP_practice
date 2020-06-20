@@ -36,7 +36,7 @@ class Bicycle:
 
 
 # Inheritance <==> "is-a"
-# Polymorphism: Monocycle "is-a" Bicycle with one wheel
+# Polymorphism: Bike "is-a" Bicycle with 2 wheels
 class Bike(Bicycle):
     """
     >>> bike = Bike()
