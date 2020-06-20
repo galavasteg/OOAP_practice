@@ -18,7 +18,7 @@
 >>> dog = Dog()
 >>> dog.eat()  # dynamic binding: Python defines which method to call
 Dog is eating
->>> Animal.eat(dog)  # static binding: I say: "use Animal class method for eating"
+>>> Animal.eat(dog)  # static binding
 Animal is eating
 
 
@@ -66,12 +66,11 @@ types инвариантны в своих типах).
 самым "глубоким" потомком одной из веток оружия.
 MyPy - статический анализатор - типы других веток и потомков
 Broadsword "не пустит".
+
 """
 
 from typing import TypeVar, Generic
 
-
-T_co = TypeVar('T_co', covariant=True)
 T_contra = TypeVar('T_contra', contravariant=True)
 
 class _T(Generic[T_contra]):
@@ -82,11 +81,13 @@ class BladedWeapon: ...
 
 class Sword(BladedWeapon): ...
 class Broadsword(Sword): ...
+class Cutlass(Broadsword): ...
 
 class Shuriken(BladedWeapon): ...
 
 
 def sharpen_melee_weapon(weapon: _T[Broadsword]) -> None: ...
+
 
 sword1, sword2 = _T(Broadsword()), _T(Sword())
 sharpen_melee_weapon(sword1)  # OK
@@ -97,8 +98,7 @@ shuriken = _T(Shuriken())
 #  "_T[Shuriken]"; expected "_T[Broadsword]"
 sharpen_melee_weapon(shuriken)  # FAIL: another weapon branch
 
-class Cutlass(Broadsword): ...
-сutlass = _T(Cutlass())
+cutlass = _T(Cutlass())
 # error: Argument 1 to "sharpen_melee_weapon" has incompatible type
 #  "_T[Cutlass]"; expected "_T[Broadsword]"
-sharpen_melee_weapon(сutlass)  # FAIL, "Cutlass" is a descendant of "Broadsword"
+sharpen_melee_weapon(cutlass)  # FAIL, "Cutlass" is a descendant of "Broadsword"
