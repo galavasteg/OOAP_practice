@@ -33,6 +33,9 @@ type() соответственно.
     3) сравнение объектов (включая глубокий вариант).
     4) клонирование объекта (создание нового объекта и глубокое
         копирование в него исходного объекта).
+    6) сериализация/десериализация (перевод в формат, подходящий для
+        удобного ввода-вывода, как правило в строковый тип, и
+        восстановление из него);
     7) печать (наглядное представление содержимого объекта в текстовом
         формате)
 реализованы ниже.
@@ -40,6 +43,7 @@ type() соответственно.
 """
 
 from __future__ import annotations
+import pickle
 from copy import deepcopy
 from typing import final, TypeVar
 
@@ -65,6 +69,16 @@ class General(object):
         clone = deepcopy(self)
         return clone
 
+    @final
+    def serialize(self) -> bytes:
+        bs = pickle.dumps(self)
+        return bs
+    @final
+    @classmethod
+    def deserialize(cls, bs: bytes) -> _T:
+        instance = pickle.loads(bs)
+        return instance
+
 
 class Any(General):
     """
@@ -72,6 +86,11 @@ class Any(General):
     >>> isinstance(a, Any), isinstance(a, General)
     (True, True)
     >>> type(a) == Any, type(a) == General
+    (True, False)
+
+    >>> bs = a.serialize()
+    >>> deser_a = Any.deserialize(bs)
+    >>> a == deser_a, a is deser_a
     (True, False)
 
     >>> a_clone = a.clone()
