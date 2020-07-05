@@ -100,6 +100,18 @@ class Any(General):
     >>> a  # doctest: +ELLIPSIS
     <"Any" instance (id=...): {'_copy_status': 0}>
 
+    >>> class A(Any):
+    ...     def __init__(self, nested_dict: dict, **kwargs):
+    ...         super().__init__(nested_dict, **kwargs)
+    ...         self.d = nested_dict
+    >>> nested1 = A({'d': {(4,56,3): {'f': 518, 'sdd9': {45: None}}}})
+    >>> nested2 = A({'d': {(4,56,3): {'f': 518, 'sdd9': {45: None}}}})
+    >>> nested1 == nested2
+    True
+    >>> nested3 = A({'d': {(4,56,3): {'f': 518, 'sdd9': {45: ''}}}})
+    >>> nested1 == nested3
+    False
+
     """
 
 
