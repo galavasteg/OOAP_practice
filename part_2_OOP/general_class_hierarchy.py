@@ -33,6 +33,10 @@ type() соответственно.
     3) сравнение объектов (включая глубокий вариант).
     4) клонирование объекта (создание нового объекта и глубокое
         копирование в него исходного объекта).
+    5) копирование объекта (копирование содержимого одного объекта в
+        другой существующий, включая DeepCopy -- глубокое рекурсивное
+        дублирование, подразумевающее также копирование содержимого
+        объектов, вложенных в копируемый объект через его поля, атрибуты);
     6) сериализация/десериализация (перевод в формат, подходящий для
         удобного ввода-вывода, как правило в строковый тип, и
         восстановление из него);
@@ -52,6 +56,37 @@ _T = TypeVar('_T')
 
 
 class General(object):
+
+    COPY_NIL = 0       # copy_to() not called yet
+    COPY_OK = 1        # last copy_to() call completed successfully
+    COPY_ATTR_ERR = 2  # other object have no attribute copied from this object
+
+    def __get_status_fields(self) -> set:
+        fields = set(attr for attr in dir(self)
+                     if attr.endswith('status'))
+        return fields
+
+    def __init__(self, *args, **kwargs):
+        self._copy_status = self.COPY_NIL
+
+    # commands:
+    @final
+    def copy_to(self, other: _T) -> None:
+        """Deep-copy of attributes of **self** to **other** with
+        ignoring status-attributes."""
+        status_fields = self.__get_status_fields()
+        copy_attrs = filter(lambda a: a not in status_fields,
+                            dir(self))
+
+        if not all((hasattr(other, a) for a in copy_attrs)):
+            self._copy_status = self.COPY_ATTR_ERR
+            return
+
+        for attr in copy_attrs:
+            value = deepcopy(getattr(self, attr))
+            setattr(other, attr, value)
+
+        self._copy_status = self.COPY_OK
 
     # requests:
     @final
@@ -79,6 +114,12 @@ class General(object):
         instance = pickle.loads(bs)
         return instance
 
+    # method statuses requests:
+    def get_copy_status(self) -> int:
+        """Return status of last copy_to() call:
+        one of the COPY_* constants."""
+        return self._copy_status
+
 
 class Any(General):
     """
@@ -87,6 +128,11 @@ class Any(General):
     (True, True)
     >>> type(a) == Any, type(a) == General
     (True, False)
+
+    >>> b = Any()
+    >>> a.copy_to(b)
+    >>> a == b, a is b  # different because of _copy_status
+    (False, False)
 
     >>> bs = a.serialize()
     >>> deser_a = Any.deserialize(bs)
@@ -98,7 +144,7 @@ class Any(General):
     (True, False)
 
     >>> a  # doctest: +ELLIPSIS
-    <"Any" instance (id=...): {'_copy_status': 0}>
+    <"Any" instance (id=...): {'_copy_status': 1}>
 
     >>> class A(Any):
     ...     def __init__(self, nested_dict: dict, **kwargs):
