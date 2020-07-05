@@ -115,6 +115,7 @@ class General(object):
         return instance
 
     # method statuses requests:
+    @final
     def get_copy_status(self) -> int:
         """Return status of last copy_to() call:
         one of the COPY_* constants."""
