@@ -21,8 +21,18 @@ type() соответственно.
 Однако, при реализации иерархии классов имеет смысл создавать
 явный метод описывающий сравнение объектов: __eq__()
 
+Глубокое копирование объектов можно осуществить с помощью функции
+стандартной библиотеки copy.deepcopy(). Функция copy.deepcopy()
+ведет себя так, как того требует операция:
+    4) клонирование объекта (создание нового объекта и глубокое
+        копирование в него исходного объекта).
+Но, чтобы не было разночтений (deepcopy VS clone), думаю, стоит
+явно определять у класса метод clone().
+
 Остальные операции:
     3) сравнение объектов (включая глубокий вариант).
+    4) клонирование объекта (создание нового объекта и глубокое
+        копирование в него исходного объекта).
     7) печать (наглядное представление содержимого объекта в текстовом
         формате)
 реализованы ниже.
@@ -30,6 +40,7 @@ type() соответственно.
 """
 
 from __future__ import annotations
+from copy import deepcopy
 from typing import final, TypeVar
 
 
@@ -49,6 +60,11 @@ class General(object):
             f' (id={id(self)}): {self.__dict__}>'
         return s
 
+    @final
+    def clone(self) -> _T:
+        clone = deepcopy(self)
+        return clone
+
 
 class Any(General):
     """
@@ -56,6 +72,10 @@ class Any(General):
     >>> isinstance(a, Any), isinstance(a, General)
     (True, True)
     >>> type(a) == Any, type(a) == General
+    (True, False)
+
+    >>> a_clone = a.clone()
+    >>> a == a_clone, a is a_clone
     (True, False)
 
     >>> a  # doctest: +ELLIPSIS
