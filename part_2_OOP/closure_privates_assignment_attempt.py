@@ -6,6 +6,7 @@
     и Any, и замкните её снизу классом None. Приведите пример полиморфного
     использования Void.
 
+Ниже, с помощью класса `VoidType`, замкнута небольшая иерархия.
 """
 from part_2_OOP.bindings_covariance_contravariance import (
         Sword, Broadsword, Cutlass, Shuriken)
@@ -14,6 +15,32 @@ from part_2_OOP.general_class_hierarchy import Any, General
 # Aliases for Python `NoneType` and its instance
 void = None
 Void = type(None)
+
+
+class VoidType:
+    def __new__(self, *args, **kwargs):
+        return void
+
+
+class Cutlass_(Cutlass, Any):
+    """
+    >>> c = Cutlass_()
+    >>> c.serialize()  # doctest: +ELLIPSIS
+    b'...'
+    """
+
+
+class CutlassHierarchy(Cutlass_, VoidType):
+    """
+    >>> c = CutlassHierarchy()
+    >>> c.serialize()
+    Traceback (most recent call last):
+        ...
+    AttributeError: 'NoneType' object has no attribute 'serialize'
+    >>> class TryInheritFromClosedHierarchy(CutlassClosed, Any): ...
+    >>> TryInheritFromClosedHierarchy() == void
+    True
+    """
 
 
 """
