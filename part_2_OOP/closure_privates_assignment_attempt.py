@@ -11,6 +11,10 @@ from part_2_OOP.bindings_covariance_contravariance import (
         Sword, Broadsword, Cutlass, Shuriken)
 from part_2_OOP.general_class_hierarchy import Any, General
 
+# Aliases for Python `NoneType` and its instance
+void = None
+Void = type(None)
+
 
 """
 ----------------------- TASK 12 -----------------------
