@@ -96,23 +96,21 @@ class Knight(Any):
     """
     >>> sword = Sword_()
     >>> unit = Knight(sword)
-    >>> unit.sword  # doctest: +ELLIPSIS
+    >>> unit.weapon  # doctest: +ELLIPSIS
     <"Sword_" instance (id=...): {'_copy_status': 0, '_assignment_status': 0}>
 
     >>> compatible_weapon = Broadsword_()
-    >>> unit.assignment_attempt('sword', compatible_weapon)
-    >>> unit.sword  # doctest: +ELLIPSIS
+    >>> unit.assignment_attempt('weapon', compatible_weapon)
+    >>> unit.weapon  # doctest: +ELLIPSIS
     <"Broadsword_" instance (id=...): {'_copy_status': 0, '_assignment_status': 0}>
     >>> unit.get_assignment_attempt_status() == sword.ASSIGNMENT_OK
     True
-    >>> type(unit.sword).__name__
-    'Broadsword_'
 
     >>> incompatible_weapon = Shuriken_()
-    >>> unit.assignment_attempt('sword', incompatible_weapon)
-    >>> unit.get_assignment_attempt_status() == sword.ASSIGNMENT_INCOMPATIBLE
+    >>> unit.assignment_attempt('weapon', incompatible_weapon)
+    >>> unit.get_assignment_attempt_status() == unit.ASSIGNMENT_INCOMPATIBLE
     True
-    >>> type(unit.sword) == Void
+    >>> type(unit.weapon) == Void
     True
 
     """
@@ -120,4 +118,4 @@ class Knight(Any):
     def __init__(self, weapon: Any,
                  *args, **kwargs):
         super().__init__(weapon, *args, **kwargs)
-        self.sword = weapon
+        self.weapon = weapon
