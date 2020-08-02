@@ -7,7 +7,17 @@
     использования Void.
 
 Ниже, с помощью класса `VoidType`, замкнута небольшая иерархия.
+Полиморфное использование Void в задании 12 в классе `Knight` в 2х местах:
+    1. команда hit(target) проверяет "пустотность" параметра target
+       с помощью ключевого слова 'if' с неявным приведением None -> False
+    1. запрос get_dmg() проверяет у оружия наличие атрибута 'damage',
+       который добавлен не был, с помощью ключевого слова
+       'getattr' cо значением по-умолчанию, используемое в случае
+       отсутствия атрибута.
+
 """
+from typing import Optional
+
 from part_2_OOP.bindings_covariance_contravariance import (
         Sword, Broadsword, Cutlass, Shuriken)
 from part_2_OOP.general_class_hierarchy import Any, General
@@ -92,7 +102,11 @@ class Broadsword_(Broadsword, Sword_): ...
 class Shuriken_(Shuriken, Any): ...
 
 
-class Knight(Any):
+class Unit(Any):
+    def take_damage(self, dmg: int):
+        print(f'{type(self).__name__} took {dmg=}')
+class Orc(Unit): ...
+class Knight(Unit):
     """
     >>> sword = Sword_()
     >>> unit = Knight(sword)
@@ -119,3 +133,21 @@ class Knight(Any):
                  *args, **kwargs):
         super().__init__(weapon, *args, **kwargs)
         self.weapon = weapon
+        self.attack_dmg = 12
+
+    def get_damage(self) -> int:
+        dmg = self.attack_dmg + getattr(self.weapon, 'damage', 0)
+        return dmg
+
+    def hit(self, target: Optional[Unit] = void) -> None:
+        """
+        >>> knight = Knight(Sword_())
+        >>> target_unit = Orc()
+        >>> knight.hit(target_unit)
+        Orc took dmg=12
+
+        """
+        if not target:
+            return
+
+        target.take_damage(self.get_damage())
