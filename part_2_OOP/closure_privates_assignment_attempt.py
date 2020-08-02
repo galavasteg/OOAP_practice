@@ -30,14 +30,14 @@ class Cutlass_(Cutlass, Any):
     """
 
 
-class CutlassHierarchy(Cutlass_, VoidType):
+class CutlassHierarchyBottom(Cutlass_, VoidType):
     """
-    >>> c = CutlassHierarchy()
+    >>> c = CutlassHierarchyBottom()
     >>> c.serialize()
     Traceback (most recent call last):
         ...
     AttributeError: 'NoneType' object has no attribute 'serialize'
-    >>> class TryInheritFromClosedHierarchy(CutlassClosed, Any): ...
+    >>> class TryInheritFromClosedHierarchy(CutlassHierarchyBottom, Any): ...
     >>> TryInheritFromClosedHierarchy() == void
     True
     """
