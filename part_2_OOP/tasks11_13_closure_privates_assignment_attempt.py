@@ -111,12 +111,12 @@ class Knight(Unit):
     >>> sword = Sword_()
     >>> unit = Knight(sword)
     >>> unit.weapon  # doctest: +ELLIPSIS
-    <"Sword_" instance (id=...): {'_copy_status': 0, '_assignment_status': 0}>
+    <"Sword_" instance (id=...)>
 
     >>> compatible_weapon = Broadsword_()
     >>> unit.assignment_attempt('weapon', compatible_weapon)
     >>> unit.weapon  # doctest: +ELLIPSIS
-    <"Broadsword_" instance (id=...): {'_copy_status': 0, '_assignment_status': 0}>
+    <"Broadsword_" instance (id=...)>
     >>> unit.get_assignment_attempt_status() == sword.ASSIGNMENT_OK
     True
 

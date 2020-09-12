@@ -96,7 +96,7 @@ class General(object):
     @final
     def __repr__(self) -> str:
         s = f'<"{self.__class__.__name__}" instance' \
-            f' (id={id(self)}): {self.__dict__}>'
+            f' (id={id(self)})>'
         return s
 
     @final
@@ -132,6 +132,8 @@ class Any(General):
 
     >>> b = Any()
     >>> a.copy_to(b)
+    >>> a.get_copy_status() == a.COPY_OK
+    True
     >>> a == b, a is b  # different because of _copy_status
     (False, False)
 
@@ -143,9 +145,6 @@ class Any(General):
     >>> a_clone = a.clone()
     >>> a == a_clone, a is a_clone
     (True, False)
-
-    >>> a  # doctest: +ELLIPSIS
-    <"Any" instance (id=...): {'_copy_status': 1}>
 
     >>> class A(Any):
     ...     def __init__(self, nested_dict: dict, **kwargs):
