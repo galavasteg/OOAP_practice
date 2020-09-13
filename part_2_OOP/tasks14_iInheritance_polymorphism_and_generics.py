@@ -12,7 +12,15 @@
     Выясните, как в используемом вами языке программирования элегантнее
     всего реализовать поддержку сложения элементов произвольных типов.
 
+В Python у объектов есть возможность определить магический метод __add__,
+отвечающий за поведения оператора '+' (в стандартной библиотеке
+operator.add). Также в стандартной библиотеке присутствуют модули
+itertools и functools, дающие возможность писать достаточно декларативные
+конструкции. Одна из таких реализована ниже, в методе Vector._sum_vectors_2.
+
 """
+import operator
+from itertools import starmap
 from typing import Optional, Any as t_Any
 
 from part_2_OOP.tasks11_13_closure_privates_assignment_attempt import Void
@@ -78,6 +86,12 @@ class Vector(Any):
             sum_sequence.append(items_sum)
 
         sum_vector = Vector(*sum_sequence)
+        return sum_vector
+
+    def _sum_vectors_2(self, other: 'Vector') -> 'Vector':
+        """Vectors summation in declarative style"""
+        sequence_items = starmap(operator.add, zip(self.sequence, other.sequence))
+        sum_vector = Vector(*sequence_items)
         return sum_vector
 
     def get_sequence_representation(self) -> tuple:
