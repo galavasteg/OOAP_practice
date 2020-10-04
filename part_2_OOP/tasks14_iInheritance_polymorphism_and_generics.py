@@ -21,7 +21,7 @@ itertools и functools, дающие возможность писать дос�
 """
 import operator
 from itertools import starmap
-from typing import Optional, Any as t_Any
+from typing import Optional, Any as t_Any, Union
 
 from part_2_OOP.tasks11_13_closure_privates_assignment_attempt import Void
 from part_2_OOP.tasks9_10_general_class_hierarchy import General, Any
@@ -68,7 +68,7 @@ class Vector(Any):
         self.sequence = args
         self._size = len(args)
 
-    def __add__(self, other: 'Vector') -> Optional['Vector']:
+    def __add__(self, other: 'Vector') -> Union['Vector', Void]:
         try:
             assert self._size == other._size
         except AssertionError:
