@@ -52,12 +52,12 @@ class MovementTest(_ClassificationDataInput):
     напишите примеры полиморфного и ковариантного вызовов метода.
 
 В Python, используя иерархию классов выше, можно показать ковариантный 
-и полиморфный вызов метода get_prepared_data(), принимающий пары 
-экземпляров-потомков _ClassificationDataInput и их 
+и полиморфный вызов метода Preprocessor.get_prepared_data(),
+принимающий пары экземпляров-потомков _ClassificationDataInput и их 
 входные данные: [(T(), data), ...]
 
 Ковариантность выражается в первом объекте пары, второй объект - 
-полиморфный аргумент(ы) для метода get_prepared(...) первого объекта.
+полиморфный(е) аргумент(ы) для метода get_prepared(...) первого объекта.
 
 При таком возове метода Preprocessor.get_prepared_data()
 возникает ограничение на контракт вызова get_prepared().
@@ -86,7 +86,7 @@ class Preprocessor(Any):
     def get_prepared_data(self, user_data_to_classify: UserData) -> InputData:
         warnings.warn(
             'Строгое решение запрещает использовать некую сущность'
-            'в программе одновременно и как полиморфную, и как ковариантную.',
+            ' в программе одновременно и как полиморфную, и как ковариантную.',
             DeprecationWarning)
         input_data = tuple(input_inst.get_prepared(*data)
                            for input_inst, data in user_data_to_classify)
